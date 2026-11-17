@@ -1,0 +1,8 @@
+{
+  "name": "SS Solar — Rooftop Solar Energy Solutions in Indore",
+  "description": "Residential, commercial, and industrial rooftop solar panel installation solutions in Indore, Madhya Pradesh. Calculate potential solar savings and request a quote.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
