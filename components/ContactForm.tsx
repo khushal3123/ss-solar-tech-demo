@@ -1,365 +1,308 @@
 'use client';
 
 import React, { useState } from 'react';
-import {
-  Send,
-  CheckCircle2,
-  Copy,
-  Check,
-  MapPin,
-  Phone,
-  Mail,
-  Clock,
-} from 'lucide-react';
-import { BRAND_CONFIG } from '@/lib/config';
-import { validateLeadForm } from '@/lib/validation';
-import { buildContactWhatsAppMessage, getWhatsAppAction } from '@/lib/whatsapp';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { CheckCircle2, ExternalLink, MessageCircle, AlertCircle } from 'lucide-react';
+import { contactFormSchema, type ContactFormValues } from '@/lib/validation';
+import { buildWhatsAppUrl, formatContactWhatsAppMessage } from '@/lib/whatsapp';
+import { cn } from '@/lib/utils';
 
-const BILL_RANGES = [
-  'Under ₹2,000/month',
-  '₹2,000 - ₹4,000/month',
-  '₹4,000 - ₹8,000/month',
-  '₹8,000 - ₹20,000/month',
-  'Above ₹20,000/month',
-];
+export function ContactForm() {
+  const [submittedPayload, setSubmittedPayload] = useState<{
+    whatsappUrl: string;
+    previewMessage: string;
+  } | null>(null);
 
-export default function ContactForm() {
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
-  const [cityArea, setCityArea] = useState('Indore');
-  const [propertyType, setPropertyType] = useState<'Residential' | 'Commercial'>('Residential');
-  const [monthlyBillRange, setMonthlyBillRange] = useState(BILL_RANGES[2]);
-  const [message, setMessage] = useState('');
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [preparedMessage, setPreparedMessage] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<ContactFormValues>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      fullName: '',
+      phone: '',
+      email: '',
+      cityArea: 'Indore',
+      propertyType: 'Residential',
+      monthlyBill: '',
+      message: '',
+    },
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const validation = validateLeadForm({
-      name,
-      phone,
-      email,
-      cityArea,
-      propertyType,
-      monthlyBillRange,
-      message,
+  const onSubmit = (data: ContactFormValues) => {
+    const formattedMessage = formatContactWhatsAppMessage(data);
+    const whatsappUrl = buildWhatsAppUrl(formattedMessage);
+    setSubmittedPayload({
+      whatsappUrl,
+      previewMessage: formattedMessage,
     });
-
-    if (!validation.isValid) {
-      setErrors(validation.errors);
-      return;
-    }
-
-    setErrors({});
-    const formatted = buildContactWhatsAppMessage({
-      name: name.trim(),
-      phone: phone.trim(),
-      email: email.trim() || undefined,
-      cityArea: cityArea.trim(),
-      propertyType,
-      monthlyBillRange,
-      message: message.trim() || undefined,
-    });
-
-    const action = getWhatsAppAction(formatted);
-    if (action.isConfigured && action.href) {
-      window.open(action.href, '_blank', 'noopener,noreferrer');
-    } else {
-      setPreparedMessage(formatted);
-    }
-  };
-
-  const handleCopy = async () => {
-    if (!preparedMessage) return;
-    try {
-      await navigator.clipboard.writeText(preparedMessage);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    } catch {
-      // Ignore clipboard failures
-    }
   };
 
   return (
-    <section className="py-16 sm:py-24 bg-[#F4F7FB]">
-      <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          {/* Left Column (5 cols): Contact Information */}
-          <div className="lg:col-span-5 bg-[#0A2540] text-white rounded-2xl p-7 sm:p-9 space-y-6 flex flex-col justify-between">
-            <div className="space-y-5">
-              <p className="text-xs font-mono uppercase tracking-widest text-[#FFB800] font-semibold">
-                Indore Consultation Desk
+    <div className="bg-white border border-[#E4E9E1] rounded-lg p-6 sm:p-9">
+      <div className="mb-7 pb-5 border-b border-[#E4E9E1]">
+        <h2 className="font-display text-2xl font-bold text-[#102D26] mb-1.5">
+          Request a Solar Consultation
+        </h2>
+        <p className="text-sm text-[#4F5E57]">
+          Fill in your details below to prepare a formatted WhatsApp enquiry for the SS Solar team.
+        </p>
+      </div>
+
+      {submittedPayload ? (
+        <div
+          role="status"
+          aria-live="polite"
+          className="space-y-5 bg-[#F4F6EF] border border-[#246B50]/30 rounded-lg p-6"
+        >
+          <div className="flex items-start gap-3">
+            <CheckCircle2 className="w-6 h-6 text-[#246B50] shrink-0 mt-0.5" aria-hidden="true" />
+            <div>
+              <h3 className="font-display text-lg font-bold text-[#102D26]">
+                Your WhatsApp Enquiry Message is Ready
+              </h3>
+              <p className="text-sm text-[#4F5E57] mt-1 leading-relaxed">
+                This demo website does not submit messages automatically in the background. Click the button below to open WhatsApp with your details pre-filled, then press <strong>Send</strong> inside WhatsApp to complete your enquiry.
               </p>
-              <h2 className="font-display font-bold text-2xl sm:text-3xl text-white">
-                Speak with a Solar Engineer
-              </h2>
-              <p className="text-slate-300 text-sm leading-relaxed">
-                Share your locality and approximate monthly electricity bill. We will prepare a custom rooftop capacity, subsidy, and EMI estimate before visiting your site.
-              </p>
-
-              <div className="space-y-4 pt-4 border-t border-white/10 text-sm">
-                <div className="flex items-start gap-3.5">
-                  <MapPin className="w-5 h-5 text-[#FFB800] shrink-0 mt-0.5" />
-                  <div>
-                    <span className="text-xs font-mono uppercase text-slate-400 block">
-                      Service Coverage
-                    </span>
-                    <span className="font-semibold text-white">
-                      {BRAND_CONFIG.serviceArea}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3.5">
-                  <Phone className="w-5 h-5 text-[#FFB800] shrink-0 mt-0.5" />
-                  <div>
-                    <span className="text-xs font-mono uppercase text-slate-400 block">
-                      Phone / WhatsApp Consultation
-                    </span>
-                    <span className="font-semibold text-white">
-                      {BRAND_CONFIG.phone.startsWith('[PLACEHOLDER')
-                        ? 'Direct Engineer Callback via Form'
-                        : BRAND_CONFIG.phone}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3.5">
-                  <Mail className="w-5 h-5 text-[#FFB800] shrink-0 mt-0.5" />
-                  <div>
-                    <span className="text-xs font-mono uppercase text-slate-400 block">
-                      Project Desk
-                    </span>
-                    <span className="font-semibold text-white">
-                      {BRAND_CONFIG.email.startsWith('[PLACEHOLDER')
-                        ? 'Indore Residential & Commercial EPC Desk'
-                        : BRAND_CONFIG.email}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3.5">
-                  <Clock className="w-5 h-5 text-[#FFB800] shrink-0 mt-0.5" />
-                  <div>
-                    <span className="text-xs font-mono uppercase text-slate-400 block">
-                      Working Hours
-                    </span>
-                    <span className="text-white">{BRAND_CONFIG.workingHours}</span>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
 
-          {/* Right Column (7 cols): Form */}
-          <div className="lg:col-span-7 bg-white rounded-2xl border border-[#E2E8F0] shadow-xs p-7 sm:p-9">
-            <h3 className="font-display font-bold text-2xl text-[#0A2540] mb-6">
-              Request Your Free Rooftop Survey
-            </h3>
+          <div className="bg-white border border-[#E4E9E1] rounded-md p-4">
+            <p className="text-xs font-semibold text-[#246B50] mb-2">
+              Prepared WhatsApp Message Preview
+            </p>
+            <pre className="whitespace-pre-wrap font-sans text-xs sm:text-sm text-[#17251F] leading-relaxed">
+              {submittedPayload.previewMessage}
+            </pre>
+          </div>
 
-            {preparedMessage ? (
-              <div className="space-y-5">
-                <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-                  <div className="text-sm text-emerald-900">
-                    <p className="font-bold">Consultation Request Ready</p>
-                    <p className="text-xs mt-1">
-                      Copy your formatted inquiry below to share with our Indore solar engineering team on WhatsApp or email.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="bg-[#F4F7FB] p-4 rounded-xl border border-[#E2E8F0] font-mono text-xs text-[#0A2540] whitespace-pre-wrap">
-                  {preparedMessage}
-                </div>
-
-                <div className="flex flex-wrap gap-3">
-                  <button
-                    type="button"
-                    onClick={handleCopy}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-[#0052CC] hover:bg-[#003E99] transition-colors"
-                  >
-                    {copied ? (
-                      <>
-                        <Check className="w-4 h-4" />
-                        <span>Copied!</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-4 h-4" />
-                        <span>Copy Inquiry Text</span>
-                      </>
-                    )}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPreparedMessage(null)}
-                    className="px-4 py-2.5 rounded-xl text-xs font-semibold text-[#475569] bg-[#F4F7FB] hover:bg-[#E2E8F0]/60 transition-colors"
-                  >
-                    Modify Details
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label
-                      htmlFor="contact-name"
-                      className="block text-xs font-semibold text-[#0A2540] mb-1.5"
-                    >
-                      Full Name *
-                    </label>
-                    <input
-                      id="contact-name"
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="Your full name"
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#F4F7FB] border border-[#E2E8F0] text-sm text-[#0A2540] focus:outline-none focus:border-[#0052CC]"
-                    />
-                    {errors.name && (
-                      <p className="text-xs text-red-600 mt-1">{errors.name}</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="contact-phone"
-                      className="block text-xs font-semibold text-[#0A2540] mb-1.5"
-                    >
-                      Phone / WhatsApp Number *
-                    </label>
-                    <input
-                      id="contact-phone"
-                      type="tel"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="10-digit mobile number"
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#F4F7FB] border border-[#E2E8F0] text-sm text-[#0A2540] focus:outline-none focus:border-[#0052CC]"
-                    />
-                    {errors.phone && (
-                      <p className="text-xs text-red-600 mt-1">{errors.phone}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label
-                      htmlFor="contact-email"
-                      className="block text-xs font-semibold text-[#0A2540] mb-1.5"
-                    >
-                      Email Address (Optional)
-                    </label>
-                    <input
-                      id="contact-email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="you@example.com"
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#F4F7FB] border border-[#E2E8F0] text-sm text-[#0A2540] focus:outline-none focus:border-[#0052CC]"
-                    />
-                    {errors.email && (
-                      <p className="text-xs text-red-600 mt-1">{errors.email}</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="contact-area"
-                      className="block text-xs font-semibold text-[#0A2540] mb-1.5"
-                    >
-                      City / Locality in Indore *
-                    </label>
-                    <input
-                      id="contact-area"
-                      type="text"
-                      value={cityArea}
-                      onChange={(e) => setCityArea(e.target.value)}
-                      placeholder="e.g., Vijay Nagar, Rau, Saket"
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#F4F7FB] border border-[#E2E8F0] text-sm text-[#0A2540] focus:outline-none focus:border-[#0052CC]"
-                    />
-                    {errors.cityArea && (
-                      <p className="text-xs text-red-600 mt-1">{errors.cityArea}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label
-                      htmlFor="contact-property-type"
-                      className="block text-xs font-semibold text-[#0A2540] mb-1.5"
-                    >
-                      Property Type *
-                    </label>
-                    <select
-                      id="contact-property-type"
-                      value={propertyType}
-                      onChange={(e) =>
-                        setPropertyType(e.target.value as 'Residential' | 'Commercial')
-                      }
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#F4F7FB] border border-[#E2E8F0] text-sm text-[#0A2540] focus:outline-none focus:border-[#0052CC]"
-                    >
-                      <option value="Residential">Residential (Home / Society)</option>
-                      <option value="Commercial">Commercial / Industrial</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="contact-bill-range"
-                      className="block text-xs font-semibold text-[#0A2540] mb-1.5"
-                    >
-                      Average Monthly Electricity Bill *
-                    </label>
-                    <select
-                      id="contact-bill-range"
-                      value={monthlyBillRange}
-                      onChange={(e) => setMonthlyBillRange(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#F4F7FB] border border-[#E2E8F0] text-sm text-[#0A2540] focus:outline-none focus:border-[#0052CC]"
-                    >
-                      {BILL_RANGES.map((range) => (
-                        <option key={range} value={range}>
-                          {range}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="contact-message"
-                    className="block text-xs font-semibold text-[#0A2540] mb-1.5"
-                  >
-                    Additional Roof or Sanctioned Load Details (Optional)
-                  </label>
-                  <textarea
-                    id="contact-message"
-                    rows={3}
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Mention roof type, sanctioned load (kW), or preferred time for site survey..."
-                    className="w-full px-4 py-2.5 rounded-xl bg-[#F4F7FB] border border-[#E2E8F0] text-sm text-[#0A2540] focus:outline-none focus:border-[#0052CC]"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold text-white bg-[#0052CC] hover:bg-[#003E99] transition-colors shadow-sm cursor-pointer"
-                >
-                  <Send className="w-4 h-4" />
-                  <span>Submit Solar Consultation Request</span>
-                </button>
-              </form>
-            )}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <a
+              href={submittedPayload.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold bg-[#25D366] text-[#102D26] hover:bg-[#20bd5b] rounded-md transition-colors whitespace-nowrap"
+            >
+              <MessageCircle className="w-4 h-4" aria-hidden="true" />
+              <span>Open WhatsApp &amp; Press Send</span>
+              <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+            </a>
+            <button
+              type="button"
+              onClick={() => {
+                setSubmittedPayload(null);
+                reset();
+              }}
+              className="inline-flex items-center justify-center px-5 py-3 text-sm font-medium border border-[#E4E9E1] bg-white text-[#102D26] hover:bg-[#F4F6EF] rounded-md transition-colors"
+            >
+              Edit or Submit Another Enquiry
+            </button>
           </div>
         </div>
-      </div>
-    </section>
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {/* Full Name */}
+            <div>
+              <label
+                htmlFor="contact-fullName"
+                className="block text-sm font-semibold text-[#102D26] mb-1.5"
+              >
+                Full Name <span className="text-[#246B50]">*</span>
+              </label>
+              <input
+                id="contact-fullName"
+                type="text"
+                autoComplete="name"
+                aria-invalid={Boolean(errors.fullName)}
+                {...register('fullName')}
+                placeholder="e.g. Rajesh Verma"
+                className={cn(
+                  'w-full px-3.5 py-2.5 text-sm text-[#102D26] bg-[#F4F6EF]/60 border rounded-md focus:outline-none focus:bg-white transition-colors',
+                  errors.fullName ? 'border-red-600' : 'border-[#E4E9E1] focus:border-[#246B50]'
+                )}
+              />
+              {errors.fullName && (
+                <p role="alert" className="mt-1.5 flex items-center gap-1.5 text-xs text-red-700">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                  <span>{errors.fullName.message}</span>
+                </p>
+              )}
+            </div>
+
+            {/* Phone Number */}
+            <div>
+              <label
+                htmlFor="contact-phone"
+                className="block text-sm font-semibold text-[#102D26] mb-1.5"
+              >
+                Phone Number (India) <span className="text-[#246B50]">*</span>
+              </label>
+              <input
+                id="contact-phone"
+                type="tel"
+                autoComplete="tel"
+                inputMode="tel"
+                aria-invalid={Boolean(errors.phone)}
+                {...register('phone')}
+                placeholder="e.g. 9876543210"
+                className={cn(
+                  'w-full px-3.5 py-2.5 text-sm text-[#102D26] bg-[#F4F6EF]/60 border rounded-md tabular-nums focus:outline-none focus:bg-white transition-colors',
+                  errors.phone ? 'border-red-600' : 'border-[#E4E9E1] focus:border-[#246B50]'
+                )}
+              />
+              {errors.phone && (
+                <p role="alert" className="mt-1.5 flex items-center gap-1.5 text-xs text-red-700">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                  <span>{errors.phone.message}</span>
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {/* Email Address (Optional) */}
+            <div>
+              <label
+                htmlFor="contact-email"
+                className="block text-sm font-semibold text-[#102D26] mb-1.5"
+              >
+                Email Address
+                <span className="ml-1.5 text-xs font-normal text-[#64736C]">Optional</span>
+              </label>
+              <input
+                id="contact-email"
+                type="email"
+                autoComplete="email"
+                aria-invalid={Boolean(errors.email)}
+                {...register('email')}
+                placeholder="you@example.com"
+                className={cn(
+                  'w-full px-3.5 py-2.5 text-sm text-[#102D26] bg-[#F4F6EF]/60 border rounded-md focus:outline-none focus:bg-white transition-colors',
+                  errors.email ? 'border-red-600' : 'border-[#E4E9E1] focus:border-[#246B50]'
+                )}
+              />
+              {errors.email && (
+                <p role="alert" className="mt-1.5 flex items-center gap-1.5 text-xs text-red-700">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                  <span>{errors.email.message}</span>
+                </p>
+              )}
+            </div>
+
+            {/* City / Area */}
+            <div>
+              <label
+                htmlFor="contact-cityArea"
+                className="block text-sm font-semibold text-[#102D26] mb-1.5"
+              >
+                City / Area <span className="text-[#246B50]">*</span>
+              </label>
+              <input
+                id="contact-cityArea"
+                type="text"
+                aria-invalid={Boolean(errors.cityArea)}
+                {...register('cityArea')}
+                placeholder="e.g. Vijay Nagar, Indore"
+                className={cn(
+                  'w-full px-3.5 py-2.5 text-sm text-[#102D26] bg-[#F4F6EF]/60 border rounded-md focus:outline-none focus:bg-white transition-colors',
+                  errors.cityArea ? 'border-red-600' : 'border-[#E4E9E1] focus:border-[#246B50]'
+                )}
+              />
+              {errors.cityArea && (
+                <p role="alert" className="mt-1.5 flex items-center gap-1.5 text-xs text-red-700">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                  <span>{errors.cityArea.message}</span>
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {/* Property Type */}
+            <div>
+              <label
+                htmlFor="contact-propertyType"
+                className="block text-sm font-semibold text-[#102D26] mb-1.5"
+              >
+                Property Type <span className="text-[#246B50]">*</span>
+              </label>
+              <select
+                id="contact-propertyType"
+                aria-invalid={Boolean(errors.propertyType)}
+                {...register('propertyType')}
+                className="w-full px-3.5 py-2.5 text-sm text-[#102D26] bg-[#F4F6EF]/60 border border-[#E4E9E1] rounded-md focus:outline-none focus:border-[#246B50] focus:bg-white transition-colors"
+              >
+                <option value="Residential">Residential</option>
+                <option value="Commercial">Commercial</option>
+                <option value="Industrial">Industrial</option>
+              </select>
+            </div>
+
+            {/* Monthly Electricity Bill */}
+            <div>
+              <label
+                htmlFor="contact-monthlyBill"
+                className="block text-sm font-semibold text-[#102D26] mb-1.5"
+              >
+                Monthly Electricity Bill (₹) <span className="text-[#246B50]">*</span>
+              </label>
+              <input
+                id="contact-monthlyBill"
+                type="text"
+                inputMode="numeric"
+                aria-invalid={Boolean(errors.monthlyBill)}
+                {...register('monthlyBill')}
+                placeholder="e.g. 4500"
+                className={cn(
+                  'w-full px-3.5 py-2.5 text-sm text-[#102D26] bg-[#F4F6EF]/60 border rounded-md tabular-nums focus:outline-none focus:bg-white transition-colors',
+                  errors.monthlyBill ? 'border-red-600' : 'border-[#E4E9E1] focus:border-[#246B50]'
+                )}
+              />
+              {errors.monthlyBill && (
+                <p role="alert" className="mt-1.5 flex items-center gap-1.5 text-xs text-red-700">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                  <span>{errors.monthlyBill.message}</span>
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Message */}
+          <div>
+            <label
+              htmlFor="contact-message"
+              className="block text-sm font-semibold text-[#102D26] mb-1.5"
+            >
+              Message / Rooftop Notes
+            </label>
+            <textarea
+              id="contact-message"
+              rows={4}
+              {...register('message')}
+              placeholder="Share any details about your roof type, preferred timing for a site visit, or questions..."
+              className="w-full px-3.5 py-2.5 text-sm text-[#102D26] bg-[#F4F6EF]/60 border border-[#E4E9E1] rounded-md focus:outline-none focus:border-[#246B50] focus:bg-white transition-colors resize-y"
+            />
+          </div>
+
+          <div className="pt-2 space-y-3">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full inline-flex items-center justify-center gap-2.5 px-6 py-3.5 text-sm sm:text-base font-semibold text-[#102D26] bg-[#F4B942] hover:bg-[#eab035] rounded-md transition-colors disabled:opacity-60"
+            >
+              <MessageCircle className="w-4 h-4" aria-hidden="true" />
+              <span>Prepare WhatsApp Enquiry</span>
+            </button>
+            <p className="text-xs text-[#64736C] leading-relaxed">
+              Submitting prepares your formatted enquiry for WhatsApp. You will be asked to press Send inside WhatsApp to transmit your message.
+            </p>
+          </div>
+        </form>
+      )}
+    </div>
   );
 }

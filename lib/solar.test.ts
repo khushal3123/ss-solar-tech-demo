@@ -1,11 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {
-  calculateSolarEstimate,
-  calculateIndicativeSubsidyInr,
-  calculateEmiBreakdown,
-  roundToStep,
-} from './calculator';
+import { calculateSolarEstimate, roundToStep, roundUpToStep } from './calculator';
 import { CALCULATOR_CONFIG } from './config';
 import { isValidIndianPhone, normalizeIndianPhone, contactFormSchema } from './validation';
 import {
@@ -15,67 +10,35 @@ import {
   formatPackageWhatsAppMessage,
 } from './whatsapp';
 
-test('roundToStep rounds accurately to 0.5 kW increments', () => {
+test('roundToStep and roundUpToStep round accurately to 0.5 kW increments', () => {
   assert.equal(roundToStep(4.68, 0.5), 4.5);
   assert.equal(roundToStep(4.76, 0.5), 5);
+  assert.equal(roundUpToStep(4.68, 0.5), 5);
+  assert.equal(roundUpToStep(4.5, 0.5), 4.5);
   assert.equal(roundToStep(0, 0.5), 0);
 });
 
-test('calculateIndicativeSubsidyInr computes PM Surya Ghar tiers for Residential only', () => {
-  assert.equal(calculateIndicativeSubsidyInr(1, 'Residential', true), 30000);
-  assert.equal(calculateIndicativeSubsidyInr(2, 'Residential', true), 60000);
-  assert.equal(calculateIndicativeSubsidyInr(3, 'Residential', true), 78000);
-  assert.equal(calculateIndicativeSubsidyInr(5, 'Residential', true), 78000);
-  assert.equal(calculateIndicativeSubsidyInr(5, 'Residential', false), 0);
-  assert.equal(calculateIndicativeSubsidyInr(10, 'Commercial', true), 0);
-});
-
-test('calculateEmiBreakdown computes 6, 36, and 60 month EMI plans', () => {
-  const emi6 = calculateEmiBreakdown(200000, 6);
-  assert.ok(emi6);
-  assert.equal(emi6.downPaymentInr, 40000);
-  assert.equal(emi6.loanAmountInr, 160000);
-  assert.equal(emi6.monthlyEmiInr, 26667);
-
-  const emi36 = calculateEmiBreakdown(200000, 36);
-  assert.ok(emi36);
-  assert.equal(emi36.tenureMonths, 36);
-  assert.ok(emi36.monthlyEmiInr > 5000 && emi36.monthlyEmiInr < 5300);
-
-  const emi60 = calculateEmiBreakdown(200000, 60);
-  assert.ok(emi60);
-  assert.equal(emi60.tenureMonths, 60);
-  assert.ok(emi60.monthlyEmiInr > 3300 && emi60.monthlyEmiInr < 3500);
-});
-
-test('calculateSolarEstimate computes expected Residential and Commercial presets with bill-capped savings and EMI', () => {
+test('calculateSolarEstimate computes expected Residential and Commercial presets with bill-capped savings', () => {
   const resDefault = calculateSolarEstimate({
     monthlyBillInr: 4500,
     tariffPerUnitInr: 8,
     propertyType: 'Residential',
-    applySubsidy: true,
-    emiTenureMonths: 36,
   });
 
   assert.equal(resDefault.hasValidInput, true);
   assert.equal(resDefault.effectiveMonthlyUnits, 563);
   assert.equal(resDefault.recommendedCapacityKw, 5);
   assert.equal(resDefault.estimatedMonthlyGenerationKwh, 600);
-  // Monthly savings capped at entered ₹4,500 bill
+  // Monthly savings capped at the entered ₹4,500 bill
   assert.equal(resDefault.estimatedMonthlySavingsInr, 4500);
   assert.equal(resDefault.estimatedAnnualSavingsInr, 54000);
   assert.equal(resDefault.estimatedSystemCostInr, 275000);
-  assert.equal(resDefault.indicativeSubsidyInr, 78000);
-  assert.equal(resDefault.netEstimatedSystemCostInr, 197000);
-  assert.equal(resDefault.indicativePaybackYears, 3.6);
-  assert.ok(resDefault.emi !== null);
-  assert.equal(resDefault.emi.tenureMonths, 36);
+  assert.equal(resDefault.indicativePaybackYears, 5.1);
 
   const comDefault = calculateSolarEstimate({
     monthlyBillInr: 25000,
     tariffPerUnitInr: 10,
     propertyType: 'Commercial',
-    emiTenureMonths: 60,
   });
 
   assert.equal(comDefault.hasValidInput, true);
@@ -85,9 +48,7 @@ test('calculateSolarEstimate computes expected Residential and Commercial preset
   assert.equal(comDefault.estimatedMonthlySavingsInr, 25000);
   assert.equal(comDefault.estimatedAnnualSavingsInr, 300000);
   assert.equal(comDefault.estimatedSystemCostInr, 1000000);
-  assert.equal(comDefault.indicativeSubsidyInr, 0);
   assert.equal(comDefault.indicativePaybackYears, 3.3);
-  assert.equal(comDefault.emi?.tenureMonths, 60);
 });
 
 test('calculateSolarEstimate omits payback when installation cost is null', () => {
@@ -106,7 +67,6 @@ test('calculateSolarEstimate omits payback when installation cost is null', () =
   assert.equal(result.hasValidInput, true);
   assert.equal(result.estimatedSystemCostInr, null);
   assert.equal(result.indicativePaybackYears, null);
-  assert.equal(result.emi, null);
 });
 
 test('calculateSolarEstimate flags rooftop area constraint when area is tight', () => {

@@ -66,39 +66,69 @@ function parseCliArgs(rawArgs) {
   return { mode, port, hostname };
 }
 
-const { mode, port, hostname } = parseCliArgs(process.argv.slice(2));
-const nextBin = path.join(projectRoot, 'node_modules', '.bin', 'next');
-
-if (mode === 'build') {
-  const buildChild = spawn(nextBin, ['build'], {
-    cwd: projectRoot,
-    stdio: ['ignore', 'inherit', 'inherit'],
-    env: {
-      ...process.env,
-      NODE_ENV: 'production',
-      NEXT_TELEMETRY_DISABLED: '1',
-    },
-  });
-
-  buildChild.on('exit', (code, signal) => {
-    if (signal) {
-      process.kill(process.pid, signal);
-      return;
+async function waitForNextBin(binPath, timeoutMs = 60000) {
+  const start = Date.now();
+  while (!fs.existsSync(binPath)) {
+    if (Date.now() - start > timeoutMs) {
+      throw new Error(`Timed out waiting for Next.js binary at ${binPath}`);
     }
-    if (code !== 0) {
-      process.exit(code ?? 1);
-      return;
-    }
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+}
 
-    const standaloneDir = path.join(projectRoot, '.next', 'standalone');
-    const staticDir = path.join(projectRoot, '.next', 'static');
-    if (!fs.existsSync(standaloneDir) || !fs.existsSync(staticDir)) {
-      console.error('Next.js standalone build artifacts (.next/standalone or .next/static) are missing.');
-      process.exit(1);
+function clearStaleDevLock() {
+  const lockPath = path.join(projectRoot, '.next', 'dev', 'lock');
+  try {
+    if (fs.existsSync(lockPath)) {
+      fs.rmSync(lockPath, { force: true });
     }
-    process.exit(0);
-  });
-} else {
+  } catch {
+    // Ignore lock cleanup errors
+  }
+}
+
+async function main() {
+  const { mode, port, hostname } = parseCliArgs(process.argv.slice(2));
+  const nextBin = path.join(projectRoot, 'node_modules', '.bin', 'next');
+
+  await waitForNextBin(nextBin);
+
+  if (mode === 'build') {
+    const buildChild = spawn(nextBin, ['build'], {
+      cwd: projectRoot,
+      stdio: ['ignore', 'inherit', 'inherit'],
+      env: {
+        ...process.env,
+        NODE_ENV: 'production',
+        NEXT_TELEMETRY_DISABLED: '1',
+      },
+    });
+
+    buildChild.on('exit', (code, signal) => {
+      if (signal) {
+        process.kill(process.pid, signal);
+        return;
+      }
+      if (code !== 0) {
+        process.exit(code ?? 1);
+        return;
+      }
+
+      const standaloneDir = path.join(projectRoot, '.next', 'standalone');
+      const staticDir = path.join(projectRoot, '.next', 'static');
+      if (!fs.existsSync(standaloneDir) || !fs.existsSync(staticDir)) {
+        console.error('Next.js standalone build artifacts (.next/standalone or .next/static) are missing.');
+        process.exit(1);
+      }
+      process.exit(0);
+    });
+    return;
+  }
+
+  if (mode === 'dev') {
+    clearStaleDevLock();
+  }
+
   const nextArgs = [mode, '-p', String(port), '-H', hostname];
 
   const child = spawn(nextBin, nextArgs, {
@@ -128,3 +158,8 @@ if (mode === 'build') {
     }
   });
 }
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

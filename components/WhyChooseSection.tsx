@@ -1,91 +1,105 @@
-'use client';
-
 import React from 'react';
-import { Wind, ShieldCheck, FileCheck2, Wrench } from 'lucide-react';
-import { motion } from 'motion/react';
+import {
+  IndianRupee,
+  SunMedium,
+  SlidersHorizontal,
+  ShieldCheck,
+  TrendingUp,
+  Headphones,
+} from 'lucide-react';
+import { Reveal } from './Reveal';
 
-const ADVANTAGES = [
+const BENEFITS = [
   {
-    index: '01',
-    icon: Wind,
-    tag: 'Engineered Safety',
-    title: 'Cyclone-Resistant Elevated Mounting',
+    number: '01',
+    title: 'Reduced Electricity Expenses',
     description:
-      'Hot-dip galvanized structures engineered for Indore rooftops to withstand high wind speeds while keeping your terrace usable underneath.',
+      'Generate your own daytime electricity directly from your rooftop and reduce monthly dependence on rising utility grid tariffs.',
+    Icon: IndianRupee,
   },
   {
-    index: '02',
-    icon: FileCheck2,
-    tag: 'Paperwork Handled',
-    title: 'End-to-End Subsidy & Net-Metering',
+    number: '02',
+    title: 'Clean & Renewable Energy',
     description:
-      'From PM Surya Ghar portal registration to MPPKVVCL bi-directional net-meter commissioning, our local Indore desk coordinates every step.',
+      'Lower your property’s carbon footprint with silent, emissions-free solar power built to harness abundant Madhya Pradesh sunlight.',
+    Icon: SunMedium,
   },
   {
-    index: '03',
-    icon: ShieldCheck,
-    tag: 'Tier-1 Hardware',
-    title: 'High-Efficiency Bifacial & Mono PERC',
+    number: '03',
+    title: 'Customized Solar Solutions',
     description:
-      'ALMM-approved solar modules paired with high-efficiency string inverters, AC/DC surge protection, and dedicated earthing kits.',
+      'Every roof and electricity bill is different. We size and configure systems around your actual consumption and usable terrace geometry.',
+    Icon: SlidersHorizontal,
   },
   {
-    index: '04',
-    icon: Wrench,
-    tag: 'Lifecycle Care',
-    title: 'Preventive Maintenance & Generation Checks',
+    number: '04',
+    title: 'Professional Installation Approach',
     description:
-      'Scheduled module cleaning guidance, string health inspections, and responsive local support across Indore and surrounding MP districts.',
+      'From structured mounting layout to neat conduit routing and safety checks, every stage is planned with engineering discipline.',
+    Icon: ShieldCheck,
+  },
+  {
+    number: '05',
+    title: 'Long-Term Energy Savings',
+    description:
+      'Solar panels are built for multi-decade rooftop operation, turning sunlit afternoons into sustained long-term electricity bill relief.',
+    Icon: TrendingUp,
+  },
+  {
+    number: '06',
+    title: 'Consultation & Customer Support',
+    description:
+      'Clear answers before you decide—covering site feasibility, net-metering steps, and ongoing guidance whenever you need assistance.',
+    Icon: Headphones,
   },
 ];
 
-export default function WhyChooseSection() {
+export function WhyChooseSection() {
   return (
-    <section id="why-us" className="py-16 sm:py-24 bg-white border-b border-[#E2E8F0] scroll-mt-16">
-      <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto text-center mb-12">
-          <p className="text-xs font-mono uppercase tracking-widest font-semibold text-[#0052CC] mb-2">
-            Why Homeowners &amp; Businesses Choose SS Solar
-          </p>
-          <h2 className="font-display font-bold text-3xl sm:text-4xl text-[#0A2540] tracking-tight">
-            Built for Long-Term Rooftop Performance
-          </h2>
-          <p className="text-[#475569] text-base sm:text-lg mt-3">
-            A rooftop solar plant is a 25-year power asset. We focus on structural precision, electrical safety, and transparent financing.
-          </p>
-        </div>
+    <section className="py-20 md:py-28 bg-[#102D26] text-[#F4F6EF]">
+      <div className="max-w-[1280px] mx-auto px-5 sm:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-start">
+          {/* Left Sticky Editorial Intro */}
+          <div className="lg:col-span-4 lg:sticky lg:top-28">
+            <Reveal>
+              <p className="text-xs font-semibold tracking-wider uppercase text-[#F4B942] mb-3">
+                Why Choose SS Solar
+              </p>
+              <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white text-balance leading-[1.15] mb-5">
+                Why Make the Switch to Solar?
+              </h2>
+              <p className="text-base text-white/75 leading-relaxed mb-8">
+                Moving to rooftop solar is an infrastructure decision for your home or business. We focus on straightforward consultation, careful system sizing, and reliable execution—without inflated promises.
+              </p>
+              <div className="pt-6 border-t border-white/15 text-xs text-white/65 leading-relaxed">
+                Serving residential neighborhoods, commercial complexes, and industrial zones across Indore, Madhya Pradesh.
+              </div>
+            </Reveal>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {ADVANTAGES.map((item, idx) => {
-            const Icon = item.icon;
-            return (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.35, delay: idx * 0.06 }}
-                className="bg-[#F4F7FB] hover:bg-white rounded-2xl p-6 border border-[#E2E8F0] hover:border-[#0052CC]/40 transition-all duration-200 hover:shadow-md flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-5">
-                    <div className="w-11 h-11 rounded-xl bg-[#0052CC] text-white flex items-center justify-center shadow-xs">
-                      <Icon className="w-5 h-5" />
+          {/* Right Editorial 2-column hairline grid */}
+          <div className="lg:col-span-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 border-t border-l border-white/15">
+              {BENEFITS.map(({ number, title, description, Icon }, index) => (
+                <Reveal key={number} delay={index * 0.05}>
+                  <div className="h-full p-7 sm:p-8 border-r border-b border-white/15 hover:bg-white/[0.03] transition-colors">
+                    <div className="flex items-center justify-between mb-6">
+                      <span className="font-display text-xs font-semibold tracking-wider text-[#F4B942]">
+                        {number}
+                      </span>
+                      <Icon className="w-5 h-5 text-[#F4B942]" aria-hidden="true" />
                     </div>
-                    <span className="font-mono text-xs uppercase tracking-wider font-semibold text-[#0052CC]">
-                      {item.index} · {item.tag}
-                    </span>
+                    <h3 className="font-display text-lg font-semibold text-white mb-2.5">
+                      {title}
+                    </h3>
+                    <p className="text-sm text-white/75 leading-relaxed">
+                      {description}
+                    </p>
                   </div>
-                  <h3 className="font-display font-bold text-lg text-[#0A2540] mb-2">
-                    {item.title}
-                  </h3>
-                  <p className="text-sm text-[#475569] leading-relaxed">
-                    {item.description}
-                  </p>
-                </div>
-              </motion.div>
-            );
-          })}
+                </Reveal>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>

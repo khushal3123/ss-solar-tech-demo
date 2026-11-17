@@ -1,101 +1,70 @@
-'use client';
-
 import React from 'react';
-import Link from 'next/link';
-import { Compass, FileCheck, Wrench, Zap, ArrowRight } from 'lucide-react';
-import { motion } from 'motion/react';
+import { Reveal } from './Reveal';
 
 const STEPS = [
   {
-    step: '01',
-    icon: Compass,
-    title: 'Free Rooftop Survey & Shadow Analysis',
+    number: '01',
+    title: 'Initial Consultation',
     description:
-      'Our Indore engineering team inspects your terrace, evaluates shadow-free area, and shares a 3D layout with an exact savings & EMI quote.',
+      'Share your monthly electricity bills, property type, and energy goals. We walk you through practical rooftop solar options for Indore conditions.',
   },
   {
-    step: '02',
-    icon: FileCheck,
-    title: 'Subsidy & MPPKVVCL Feasibility Filing',
+    number: '02',
+    title: 'Site Assessment',
     description:
-      'We prepare and submit your PM Surya Ghar application, load-sanction check, and net-metering paperwork with MPPKVVCL.',
+      'We inspect your roof dimensions, orientation, shading obstructions, and electrical panel setup to determine usable capacity.',
   },
   {
-    step: '03',
-    icon: Wrench,
-    title: 'Safe Installation with Cyclone-Ready Mounting',
+    number: '03',
+    title: 'Customized Solar Proposal',
     description:
-      'Certified technicians install galvanized mounting structures, Tier-1 solar panels, inverter, and AC/DC safety protection with zero roof leakage.',
+      'Receive a tailored system layout, component specification overview, indicative generation projection, and clear project quotation.',
   },
   {
-    step: '04',
-    icon: Zap,
-    title: 'Net-Meter Commissioning & App Handover',
+    number: '04',
+    title: 'Installation & Handover',
     description:
-      'Once bi-directional metering is active, your system begins exporting surplus solar units and you track daily generation on your phone.',
+      'Structured rooftop mounting, neat wiring, testing, and guidance through net-metering coordination and system walkthrough.',
   },
 ];
 
-export default function HowItWorks() {
+export function HowItWorks() {
   return (
-    <section
-      id="process"
-      className="py-16 sm:py-24 bg-[#F4F7FB] border-b border-[#E2E8F0] scroll-mt-16"
-    >
-      <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-12 gap-6">
-          <div className="max-w-2xl">
-            <p className="text-xs font-mono uppercase tracking-widest font-semibold text-[#0052CC] mb-2">
-              Simple 4-Step Turnkey Execution
+    <section className="py-20 md:py-28 bg-white border-y border-[#E4E9E1]">
+      <div className="max-w-[1280px] mx-auto px-5 sm:px-8">
+        <Reveal>
+          <div className="max-w-2xl mb-14">
+            <p className="text-xs font-semibold tracking-wider uppercase text-[#246B50] mb-3">
+              Process
             </p>
-            <h2 className="font-display font-bold text-3xl sm:text-4xl text-[#0A2540] tracking-tight">
-              We Handle Everything, You Just Save
+            <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-[#102D26] text-balance">
+              Your Journey to Solar, Made Simple.
             </h2>
-            <p className="text-[#475569] text-base sm:text-lg mt-2">
-              We manage the complete journey from initial rooftop inspection in Indore to final net-meter activation.
-            </p>
           </div>
+        </Reveal>
 
-          <Link
-            href="#consultation-form"
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-bold text-white bg-[#0052CC] hover:bg-[#003E99] transition-colors self-start lg:self-auto"
-          >
-            <span>Schedule Step 1: Free Site Survey</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
+        <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
+          {/* Desktop hairline connector */}
+          <div
+            aria-hidden="true"
+            className="hidden lg:block absolute top-5 left-0 right-0 h-[1px] bg-[#E4E9E1]"
+          />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {STEPS.map((item, idx) => {
-            const Icon = item.icon;
-            return (
-              <motion.div
-                key={item.step}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.35, delay: idx * 0.06 }}
-                className="bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-2xs relative flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-5">
-                    <span className="font-mono font-bold text-2xl text-[#0052CC] tabular-nums">
-                      {item.step}
-                    </span>
-                    <div className="w-10 h-10 rounded-xl bg-[#F4F7FB] border border-[#E2E8F0] flex items-center justify-center text-[#0A2540]">
-                      <Icon className="w-5 h-5 text-[#0052CC]" />
-                    </div>
-                  </div>
-                  <h3 className="font-display font-bold text-lg text-[#0A2540] mb-2">
-                    {item.title}
-                  </h3>
-                  <p className="text-sm text-[#475569] leading-relaxed">
-                    {item.description}
-                  </p>
+          {STEPS.map((step, index) => (
+            <Reveal key={step.number} delay={index * 0.08}>
+              <div className="relative pt-0 lg:pt-10 flex flex-col">
+                <div className="lg:absolute lg:top-0 lg:left-0 inline-flex items-center justify-center w-10 h-10 bg-[#F4F6EF] border border-[#E4E9E1] rounded-md font-display text-sm font-bold text-[#102D26] mb-4 lg:mb-0">
+                  {step.number}
                 </div>
-              </motion.div>
-            );
-          })}
+                <h3 className="font-display text-lg font-bold text-[#102D26] mb-2.5 mt-1">
+                  {step.title}
+                </h3>
+                <p className="text-sm text-[#4F5E57] leading-relaxed">
+                  {step.description}
+                </p>
+              </div>
+            </Reveal>
+          ))}
         </div>
       </div>
     </section>

@@ -1,68 +1,70 @@
 import type { Metadata, Viewport } from 'next';
-import { Space_Grotesk, Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
+import { Plus_Jakarta_Sans, Manrope } from 'next/font/google';
 import './globals.css';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import WhatsAppButton from '@/components/WhatsAppButton';
-import { BRAND_CONFIG } from '@/lib/config';
+import { SITE_CONFIG } from '@/lib/config';
+import { MotionProvider } from '@/components/MotionProvider';
+import { Navbar } from '@/components/Navbar';
+import { Footer } from '@/components/Footer';
+import { WhatsAppButton } from '@/components/WhatsAppButton';
 
-const spaceGrotesk = Space_Grotesk({
+const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
-  variable: '--font-space',
-  display: 'swap',
-});
-
-const plusJakartaSans = Plus_Jakarta_Sans({
-  subsets: ['latin'],
+  weight: ['500', '600', '700'],
   variable: '--font-jakarta',
   display: 'swap',
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const manrope = Manrope({
   subsets: ['latin'],
-  variable: '--font-jetbrains',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-manrope',
   display: 'swap',
 });
 
 export const viewport: Viewport = {
-  themeColor: '#0A2540',
   width: 'device-width',
   initialScale: 1,
+  themeColor: '#102D26',
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(BRAND_CONFIG.siteUrl),
+  metadataBase: new URL(SITE_CONFIG.siteUrl),
   title: {
-    default: 'SS Solar | Smart Rooftop Solar Installation in Indore, MP',
+    default: 'SS Solar — Rooftop Solar Panel Installation in Indore',
     template: '%s | SS Solar Indore',
   },
   description:
-    'Switch to rooftop solar in Indore, Madhya Pradesh with SS Solar. Check your solar savings, EMI estimates, and PM Surya Ghar subsidy eligibility with a free consultation.',
+    'Switch to smarter rooftop solar with SS Solar in Indore, Madhya Pradesh. Explore residential, commercial, and industrial solar solutions and estimate your savings.',
   keywords: [
-    'Solar Panel Installation Indore',
-    'Rooftop Solar Indore',
-    'SS Solar Indore',
-    'Solar EMI & Savings Calculator Indore',
-    'Residential Solar Indore',
-    'Commercial Solar Madhya Pradesh',
+    'Solar Panel Installation in Indore',
+    'Solar Company in Indore',
+    'Rooftop Solar Installation Indore',
+    'Residential Solar Panels Indore',
+    'Commercial Solar Installation Indore',
+    'Solar Energy Solutions Indore',
   ],
-  alternates: {
-    canonical: '/',
-  },
   openGraph: {
-    title: 'SS Solar | Smart Rooftop Solar Installation in Indore, MP',
-    description:
-      'Switch to rooftop solar in Indore, Madhya Pradesh with SS Solar. Check your solar savings, EMI estimates, and subsidy eligibility.',
-    url: BRAND_CONFIG.siteUrl,
-    siteName: 'SS Solar',
-    locale: 'en_IN',
     type: 'website',
+    locale: 'en_IN',
+    siteName: SITE_CONFIG.brandName,
+    title: 'SS Solar — Rooftop Solar Panel Installation in Indore',
+    description:
+      'Switch to smarter rooftop solar with SS Solar in Indore, Madhya Pradesh. Calculate potential savings and request a personalized solar quote.',
+    images: [
+      {
+        url: '/images/og-solar-indore.jpg',
+        width: 1280,
+        height: 720,
+        alt: 'Modern independent home in Indore with rooftop solar panels',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'SS Solar | Smart Rooftop Solar Installation in Indore, MP',
+    title: 'SS Solar — Rooftop Solar Panel Installation in Indore',
     description:
-      'Switch to rooftop solar in Indore, Madhya Pradesh with SS Solar. Check your solar savings, EMI estimates, and subsidy eligibility.',
+      'Explore residential, commercial, and industrial rooftop solar installation solutions in Indore, Madhya Pradesh.',
+    images: ['/images/og-solar-indore.jpg'],
   },
   robots: {
     index: true,
@@ -72,16 +74,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
-  const jsonLd = {
+}>) {
+  const localBusinessSchema = {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
-    name: BRAND_CONFIG.name,
+    name: SITE_CONFIG.brandName,
     description:
-      'Rooftop solar consultation, system design, installation, and maintenance services for homes and businesses in Indore, Madhya Pradesh.',
-    url: BRAND_CONFIG.siteUrl,
+      'Solar panel installation and renewable energy solutions for residential, commercial, and industrial properties in Indore, Madhya Pradesh.',
+    url: SITE_CONFIG.siteUrl,
     areaServed: {
       '@type': 'City',
       name: 'Indore',
@@ -93,25 +95,30 @@ export default function RootLayout({
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Indore',
-      addressRegion: 'Madhya Pradesh',
+      addressRegion: 'MP',
       addressCountry: 'IN',
     },
+    serviceType: [
+      'Residential Rooftop Solar Installation',
+      'Commercial Solar Installation',
+      'Industrial Solar Solutions',
+      'Solar Consultation',
+    ],
   };
 
   return (
-    <html
-      lang="en"
-      className={`${spaceGrotesk.variable} ${plusJakartaSans.variable} ${jetbrainsMono.variable}`}
-    >
-      <body className="min-h-screen flex flex-col antialiased selection:bg-[#0052CC] selection:text-white bg-white text-[#0A2540]">
+    <html lang="en" className={`${jakarta.variable} ${manrope.variable}`}>
+      <body className="min-h-screen flex flex-col bg-[#F4F6EF] text-[#17251F] selection:bg-[#F4B942]/30 selection:text-[#102D26]">
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
         />
-        <Navbar />
-        <main className="flex-grow">{children}</main>
-        <Footer />
-        <WhatsAppButton />
+        <MotionProvider>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <WhatsAppButton />
+        </MotionProvider>
       </body>
     </html>
   );

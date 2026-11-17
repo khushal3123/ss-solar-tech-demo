@@ -1,10 +1,25 @@
 import React from 'react';
-import Hero from '@/components/Hero';
-import SolarCalculator from '@/components/SolarCalculator';
-import WhyChooseSection from '@/components/WhyChooseSection';
-import HowItWorks from '@/components/HowItWorks';
-import FAQ from '@/components/FAQ';
+import type { Metadata } from 'next';
+import { Hero } from '@/components/Hero';
+import { IntroSection } from '@/components/IntroSection';
+import { ServiceSection } from '@/components/ServiceSection';
+import { WhyChooseSection } from '@/components/WhyChooseSection';
+import { SolarCalculator } from '@/components/SolarCalculator';
+import { HowItWorks } from '@/components/HowItWorks';
+import { ProjectGallery } from '@/components/ProjectGallery';
+import { PricingSection } from '@/components/PricingSection';
+import { FAQ } from '@/components/FAQ';
+import { CTASection } from '@/components/CTASection';
 import { FAQ_ITEMS } from '@/lib/config';
+
+export const metadata: Metadata = {
+  title: 'SS Solar — Solar Panel Installation in Indore, Madhya Pradesh',
+  description:
+    'Trusted rooftop solar solutions in Indore for homes, offices, and industries. Calculate your potential electricity savings and request a personalized solar quote from SS Solar.',
+  alternates: {
+    canonical: '/',
+  },
+};
 
 export default function HomePage() {
   const faqSchema = {
@@ -27,10 +42,15 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <Hero />
-      <SolarCalculator />
+      <IntroSection />
+      <ServiceSection />
       <WhyChooseSection />
+      <SolarCalculator />
       <HowItWorks />
+      <ProjectGallery />
+      <PricingSection />
       <FAQ />
+      <CTASection />
     </>
   );
 }

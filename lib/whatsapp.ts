@@ -14,8 +14,8 @@ export function buildWhatsAppUrl(
 export function formatGeneralWhatsAppMessage(): string {
   return [
     'Hello SS Solar Team,',
-    'I would like to book a FREE rooftop solar consultation in Indore.',
-    'Please share details for a site visit and savings estimate.',
+    'I would like to enquire about rooftop solar installation in Indore.',
+    'Please share details for a consultation.',
   ].join('\n');
 }
 
@@ -24,7 +24,7 @@ export function formatCalculatorWhatsAppMessage(
   result: SolarCalculatorResult
 ): string {
   const lines = [
-    'Hello SS Solar Team, I used your Solar Savings & EMI Calculator and would like a personalized quote:',
+    'Hello SS Solar Team, I used your Solar Savings Calculator and would like a personalized quote:',
     '',
     `• Property Type: ${input.propertyType}`,
     `• Monthly Electricity Bill: ${formatInr(result.effectiveMonthlyBillInr)}`,
@@ -37,27 +37,17 @@ export function formatCalculatorWhatsAppMessage(
   }
 
   lines.push(
-    `• Recommended Capacity: ${result.recommendedCapacityKw} kW`,
+    `• Recommended Indicative Capacity: ${result.recommendedCapacityKw} kW`,
     `• Est. Monthly Generation: ~${result.estimatedMonthlyGenerationKwh} units`,
-    `• Est. Monthly Savings: ~${formatInr(result.estimatedMonthlySavingsInr)}/mo`,
-    `• Est. Annual Savings: ~${formatInr(result.estimatedAnnualSavingsInr)}/yr`
+    `• Est. Monthly Savings: ~${formatInr(result.estimatedMonthlySavingsInr)}`,
+    `• Est. Annual Savings: ~${formatInr(result.estimatedAnnualSavingsInr)}`
   );
-
-  if (result.indicativeSubsidyInr > 0) {
-    lines.push(`• Indicative Subsidy Considered: ${formatInr(result.indicativeSubsidyInr)}`);
-  }
-
-  if (result.emi) {
-    lines.push(
-      `• Preferred EMI Tenure: ${result.emi.tenureMonths} Months (~${formatInr(result.emi.monthlyEmiInr)}/mo)`
-    );
-  }
 
   if (result.indicativePaybackYears !== null) {
     lines.push(`• Indicative Payback Estimate: ~${result.indicativePaybackYears} years`);
   }
 
-  lines.push('', 'Please contact me to schedule a free site visit in Indore.');
+  lines.push('', 'Please contact me to discuss a site assessment in Indore.');
   return lines.join('\n');
 }
 
@@ -68,14 +58,14 @@ export function formatPackageWhatsAppMessage(
   return [
     'Hello SS Solar Team,',
     `I am interested in the "${packageName}" (${exampleCapacity}) indicative solar package.`,
-    'Could you share a customized quotation and arrange a free consultation?',
+    'Could you share a customized quotation and arrange a consultation?',
   ].join('\n');
 }
 
 export function formatContactWhatsAppMessage(data: ContactFormValues): string {
   const cleanPhone = normalizeIndianPhone(data.phone);
   const lines = [
-    'Hello SS Solar Team, I would like to schedule a FREE solar consultation:',
+    'Hello SS Solar Team, here are my solar enquiry details:',
     '',
     `• Full Name: ${data.fullName}`,
     `• Phone: +91 ${cleanPhone}`,
@@ -86,108 +76,15 @@ export function formatContactWhatsAppMessage(data: ContactFormValues): string {
   }
 
   lines.push(
-    `• City / Area / Pin Code: ${data.cityArea}`,
+    `• City / Area: ${data.cityArea}`,
     `• Property Type: ${data.propertyType}`,
-    `• Monthly Electricity Bill: ${data.monthlyBill}`
+    `• Monthly Electricity Bill: ₹${data.monthlyBill.replace(/[₹,\s]/g, '')}`
   );
 
   if (data.message.trim()) {
-    lines.push(`• Notes: ${data.message.trim()}`);
+    lines.push(`• Message: ${data.message.trim()}`);
   }
 
-  lines.push('', 'Looking forward to speaking with your Indore team.');
+  lines.push('', 'Looking forward to hearing from you.');
   return lines.join('\n');
 }
-
-export const buildGeneralWhatsAppMessage = formatGeneralWhatsAppMessage;
-
-export function buildContactWhatsAppMessage(input: {
-  name: string;
-  phone: string;
-  email?: string;
-  cityArea: string;
-  propertyType: string;
-  monthlyBillRange: string;
-  message?: string;
-}): string {
-  const cleanPhone = normalizeIndianPhone(input.phone);
-  const lines = [
-    'Hello SS Solar Team, I would like to schedule a FREE solar consultation:',
-    '',
-    `• Full Name: ${input.name}`,
-    `• Phone: +91 ${cleanPhone}`,
-  ];
-  if (input.email) {
-    lines.push(`• Email: ${input.email}`);
-  }
-  lines.push(
-    `• Locality / Pin Code: ${input.cityArea}`,
-    `• Property Type: ${input.propertyType}`,
-    `• Monthly Electricity Bill: ${input.monthlyBillRange}`
-  );
-  if (input.message) {
-    lines.push(`• Notes: ${input.message}`);
-  }
-  lines.push('', 'Looking forward to speaking with your Indore solar team.');
-  return lines.join('\n');
-}
-
-export function buildCalculatorWhatsAppMessage(input: {
-  monthlyBillInr: number;
-  tariffPerUnitInr: number;
-  propertyType: string;
-  recommendedCapacityKw: number;
-  estimatedMonthlySavingsInr: number;
-  estimatedAnnualSavingsInr: number;
-  indicativeSubsidyInr: number;
-  netEstimatedSystemCostInr: number | null;
-  preferredEmiTenureMonths: number;
-  preferredMonthlyEmiInr: number;
-}): string {
-  const lines = [
-    'Hello SS Solar Team, I used your Solar Savings & EMI Calculator and would like a personalized quote:',
-    '',
-    `• Property Type: ${input.propertyType}`,
-    `• Monthly Electricity Bill: ${formatInr(input.monthlyBillInr)}`,
-    `• Electricity Tariff: ₹${input.tariffPerUnitInr}/unit`,
-    `• Recommended Capacity: ${input.recommendedCapacityKw} kW`,
-    `• Est. Monthly Savings: ~${formatInr(input.estimatedMonthlySavingsInr)}/mo`,
-    `• Est. Annual Savings: ~${formatInr(input.estimatedAnnualSavingsInr)}/yr`,
-  ];
-
-  if (input.indicativeSubsidyInr > 0) {
-    lines.push(`• Indicative Subsidy Considered: ${formatInr(input.indicativeSubsidyInr)}`);
-  }
-
-  if (input.netEstimatedSystemCostInr !== null) {
-    lines.push(`• Effective Net System Cost: ~${formatInr(input.netEstimatedSystemCostInr)}`);
-  }
-
-  if (input.preferredMonthlyEmiInr > 0) {
-    lines.push(
-      `• Preferred EMI Plan: ${input.preferredEmiTenureMonths} Months (~${formatInr(input.preferredMonthlyEmiInr)}/mo)`
-    );
-  }
-
-  lines.push('', 'Please contact me to schedule a free rooftop survey in Indore.');
-  return lines.join('\n');
-}
-
-export function getWhatsAppAction(message: string): {
-  isConfigured: boolean;
-  href: string | null;
-} {
-  const raw: string = SITE_CONFIG.contactPlaceholders.whatsapp;
-  const isPlaceholder = raw.includes('PLACEHOLDER') || raw === '919999999999';
-  if (isPlaceholder) {
-    return {
-      isConfigured: false,
-      href: null,
-    };
-  }
-  return {
-    isConfigured: true,
-    href: buildWhatsAppUrl(message, raw),
-  };
-}
-

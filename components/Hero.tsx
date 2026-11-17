@@ -1,382 +1,116 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import {
-  ShieldCheck,
-  CheckCircle2,
-  Calculator,
-  ArrowRight,
-  Copy,
-  Check,
-  Building2,
-  Home,
-} from 'lucide-react';
-import { SOLAR_IMAGES, BRAND_CONFIG } from '@/lib/config';
-import { validateLeadForm } from '@/lib/validation';
-import { buildContactWhatsAppMessage, getWhatsAppAction } from '@/lib/whatsapp';
 import { motion } from 'motion/react';
+import { ArrowDown, ArrowRight, Calculator } from 'lucide-react';
+import { SOLAR_IMAGES } from '@/lib/images';
 
-const BILL_BRACKETS = [
-  { label: '< ₹2,000', value: 'Under ₹2,000/month' },
-  { label: '₹2,000 - ₹4,000', value: '₹2,000 - ₹4,000/month' },
-  { label: '₹4,000 - ₹8,000', value: '₹4,000 - ₹8,000/month' },
-  { label: '₹8,000+', value: 'Above ₹8,000/month' },
-];
-
-export default function Hero() {
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [cityArea, setCityArea] = useState('Vijay Nagar, Indore');
-  const [propertyType, setPropertyType] = useState<'Residential' | 'Commercial'>('Residential');
-  const [billRange, setBillRange] = useState(BILL_BRACKETS[2].value);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [submittedMessage, setSubmittedMessage] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
-
-  const handleConsultationSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const validation = validateLeadForm({
-      name,
-      phone,
-      cityArea,
-      propertyType,
-      monthlyBillRange: billRange,
-    });
-
-    if (!validation.isValid) {
-      setErrors(validation.errors);
-      return;
-    }
-
-    setErrors({});
-    const msg = buildContactWhatsAppMessage({
-      name: name.trim(),
-      phone: phone.trim(),
-      cityArea: cityArea.trim(),
-      propertyType,
-      monthlyBillRange: billRange,
-      message: 'Requested Free Rooftop Solar Consultation from Hero Banner.',
-    });
-
-    const action = getWhatsAppAction(msg);
-    if (action.isConfigured && action.href) {
-      window.open(action.href, '_blank', 'noopener,noreferrer');
-    } else {
-      setSubmittedMessage(msg);
-    }
-  };
-
-  const handleCopyMessage = async () => {
-    if (!submittedMessage) return;
-    try {
-      await navigator.clipboard.writeText(submittedMessage);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    } catch {
-      // Ignore clipboard failures
-    }
-  };
-
+export function Hero() {
   return (
-    <section className="relative bg-[#0A2540] text-white overflow-hidden border-b border-white/10">
-      {/* Architectural Solar Background + Crisp Deep Navy Gradient */}
-      <div className="absolute inset-0 z-0">
+    <section className="relative min-h-[100svh] lg:min-h-[860px] flex items-end bg-[#102D26] text-white overflow-hidden">
+      {/* Full-bleed architectural rooftop solar photography */}
+      <div className="absolute inset-0">
         <Image
-          src={SOLAR_IMAGES.hero}
-          alt="Engineered rooftop solar installation in Indore"
-          fill
+          src={SOLAR_IMAGES.hero.src}
+          alt={SOLAR_IMAGES.hero.alt}
+          width={SOLAR_IMAGES.hero.width}
+          height={SOLAR_IMAGES.hero.height}
           priority
-          className="object-cover object-center opacity-20"
+          loading="eager"
           referrerPolicy="no-referrer"
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(110deg, rgba(10,37,64,0.97) 0%, rgba(10,37,64,0.91) 55%, rgba(0,82,204,0.75) 100%)',
-          }}
+          className="w-full h-full object-cover object-center"
         />
       </div>
 
-      <div className="relative z-10 max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-          {/* Left Column (7 cols): Value Proposition & Engineering Proof */}
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45 }}
-            className="lg:col-span-7 space-y-6"
-          >
-            {/* Unboxed Architectural Kicker */}
-            <div className="border-l-2 border-[#FFB800] pl-3.5">
-              <p className="font-mono text-xs sm:text-sm uppercase tracking-widest text-[#FFB800] font-semibold">
-                Indore Rooftop Solar EPC · PM Surya Ghar Subsidy Up to ₹78,000*
-              </p>
-            </div>
+      {/* Deep Forest Green measured gradient scrim for crisp WCAG contrast */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-gradient-to-t from-[#102D26] via-[#102D26]/70 to-[#102D26]/35"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-gradient-to-r from-[#102D26]/90 via-[#102D26]/50 to-transparent"
+      />
 
-            {/* Headline */}
-            <h1 className="font-display font-bold text-3xl sm:text-5xl lg:text-[54px] tracking-tight leading-[1.08] text-white">
-              Switch to Smarter{' '}
-              <span className="text-[#FFB800]">Rooftop Solar</span> in Indore.
-            </h1>
+      {/* Subtle animated geometric sun arc in upper right */}
+      <motion.div
+        aria-hidden="true"
+        initial={{ opacity: 0.7 }}
+        animate={{ opacity: 0.9 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="pointer-events-none hidden lg:block absolute right-10 top-24 w-[280px] h-[280px]"
+      >
+        <svg viewBox="0 0 320 320" fill="none" className="w-full h-full">
+          <motion.circle
+            cx="160"
+            cy="160"
+            r="118"
+            stroke="#F4B942"
+            strokeOpacity="0.28"
+            strokeWidth="1"
+            strokeDasharray="6 8"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 90, repeat: Infinity, ease: 'linear' }}
+            style={{ transformOrigin: '160px 160px' }}
+          />
+          <circle cx="160" cy="160" r="76" stroke="#FFFFFF" strokeOpacity="0.16" strokeWidth="1" />
+          <circle cx="160" cy="160" r="14" fill="#F4B942" fillOpacity="0.85" />
+          <path d="M160 22V56M160 264V298M22 160H56M264 160H298" stroke="#F4B942" strokeOpacity="0.4" strokeWidth="1.2" />
+        </svg>
+      </motion.div>
 
-            {/* Subtitle */}
-            <p className="text-slate-200 text-base sm:text-lg leading-relaxed max-w-2xl">
-              Cut your monthly MPPKVVCL electricity bills by up to 90% with cyclone-tested solar mounting, transparent 6/36/60-month EMI plans, and complete net-metering assistance across Indore.
+      <div className="relative z-10 w-full max-w-[1280px] mx-auto px-5 sm:px-8 pt-28 pb-12 md:pb-18">
+        <div className="max-w-3xl">
+          {/* Clean unboxed location indicator (zero pill clutter) */}
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm font-medium tracking-wide text-[#F4B942] mb-5">
+            <span className="whitespace-nowrap">Indore · Madhya Pradesh</span>
+            <span aria-hidden="true" className="hidden sm:inline-block h-[1px] w-10 bg-[#F4B942]/60" />
+            <span className="text-white/85 font-normal whitespace-nowrap">Rooftop Solar Energy Solutions</span>
+          </div>
+
+          {/* Editorial Display Headline */}
+          <h1 className="font-display text-[clamp(2.25rem,4.6vw,4.15rem)] font-bold leading-[1.08] tracking-tight text-white text-balance mb-5">
+            Power Your Home. Not Your Electricity Bills.
+          </h1>
+
+          {/* Supporting prose */}
+          <p className="text-base sm:text-lg text-white/85 leading-relaxed max-w-2xl mb-8">
+            Switch to smarter solar energy with SS Solar. Discover reliable rooftop solar solutions designed to help homes and businesses save on electricity costs.
+          </p>
+
+          {/* Primary & Secondary CTAs — immediately visible on first paint */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+            <a
+              href="#calculator"
+              className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 text-sm sm:text-base font-semibold text-[#102D26] bg-[#F4B942] hover:bg-[#eab035] rounded-md transition-colors duration-200 whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F4B942]"
+            >
+              <Calculator className="w-4 h-4" aria-hidden="true" />
+              <span>Calculate Your Savings</span>
+            </a>
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-sm sm:text-base font-medium text-white border border-white/40 bg-[#102D26]/40 hover:bg-white/10 rounded-md transition-colors duration-200 whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              <span>Get Free Consultation</span>
+              <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            </Link>
+          </div>
+
+          {/* Quiet trust footer row */}
+          <div className="mt-10 pt-6 border-t border-white/15 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs sm:text-sm text-white/75">
+            <p>
+              Residential, commercial &amp; industrial rooftop solar systems tailored to your property&apos;s electricity load.
             </p>
-
-            {/* Architectural Proof Strip (Hairline Grid with Tabular Numerals) */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 border-y border-white/15 divide-y sm:divide-y-0 sm:divide-x divide-white/15 py-4">
-              <div className="py-2 sm:py-0 sm:pr-5">
-                <div className="font-display font-bold text-2xl sm:text-3xl text-[#FFB800] tabular-nums">
-                  Up to ₹78,000*
-                </div>
-                <p className="text-xs text-slate-300 mt-1">
-                  Direct PM Surya Ghar residential central subsidy
-                </p>
-              </div>
-
-              <div className="py-2 sm:py-0 sm:px-5">
-                <div className="font-display font-bold text-2xl sm:text-3xl text-white tabular-nums">
-                  6 / 36 / 60 Mo
-                </div>
-                <p className="text-xs text-slate-300 mt-1">
-                  Flexible EMI plans offset by monthly bill savings
-                </p>
-              </div>
-
-              <div className="py-2 sm:py-0 sm:pl-5">
-                <div className="font-display font-bold text-2xl sm:text-3xl text-white tabular-nums">
-                  25-Year
-                </div>
-                <p className="text-xs text-slate-300 mt-1">
-                  Module performance warranty & galvanized structure
-                </p>
-              </div>
-            </div>
-
-            {/* Secondary Action Link to Calculator */}
-            <div className="pt-1 flex flex-wrap items-center gap-5">
-              <Link
-                href="#calculator"
-                className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl text-sm font-bold text-[#0A2540] bg-[#FFB800] hover:bg-[#E6A600] transition-all shadow-md"
-              >
-                <Calculator className="w-4 h-4" />
-                <span>Calculate Your Savings & EMI</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <div className="flex items-center gap-2 text-xs text-slate-300">
-                <ShieldCheck className="w-4 h-4 text-[#FFB800] shrink-0" />
-                <span>Free shadow-analysis & engineering visit across Indore</span>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Right Column (5 cols): Embedded Consultation Form Banner */}
-          <motion.div
-            id="consultation-form"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="lg:col-span-5"
-          >
-            <div className="bg-white text-[#0A2540] rounded-2xl shadow-2xl border border-[#E2E8F0] p-6 sm:p-7">
-              <div className="pb-4 mb-5 border-b border-[#E2E8F0]">
-                <p className="text-[11px] font-mono uppercase tracking-widest font-semibold text-[#0052CC] mb-1">
-                  Free Engineering Site Visit · Indore
-                </p>
-                <h2 className="font-display font-bold text-xl sm:text-2xl text-[#0A2540]">
-                  Book a Free Solar Consultation
-                </h2>
-              </div>
-
-              {submittedMessage ? (
-                <div className="space-y-4 py-2" data-testid="hero-form-success">
-                  <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-                    <div className="text-xs text-emerald-900">
-                      <p className="font-bold text-sm">Consultation Summary Ready!</p>
-                      <p className="mt-0.5">
-                        Your inquiry details have been formatted for our Indore solar engineering desk.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="bg-[#F4F7FB] p-3.5 rounded-xl border border-[#E2E8F0] text-xs font-mono text-[#0A2540] whitespace-pre-wrap">
-                    {submittedMessage}
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row gap-2.5">
-                    <button
-                      type="button"
-                      onClick={handleCopyMessage}
-                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-[#0052CC] hover:bg-[#003E99] transition-colors cursor-pointer"
-                    >
-                      {copied ? (
-                        <>
-                          <Check className="w-4 h-4" />
-                          <span>Copied Inquiry Text</span>
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="w-4 h-4" />
-                          <span>Copy Inquiry Details</span>
-                        </>
-                      )}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setSubmittedMessage(null)}
-                      className="px-4 py-2.5 rounded-xl text-xs font-semibold text-[#475569] bg-[#F4F7FB] hover:bg-[#E2E8F0]/60 transition-colors cursor-pointer"
-                    >
-                      Edit Details
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <form onSubmit={handleConsultationSubmit} className="space-y-4" noValidate>
-                  {/* Property Type Switch */}
-                  <div>
-                    <label className="block text-xs font-semibold text-[#475569] mb-1.5">
-                      Select Property Type
-                    </label>
-                    <div className="grid grid-cols-2 gap-2 p-1 bg-[#F4F7FB] rounded-xl border border-[#E2E8F0]">
-                      <button
-                        type="button"
-                        onClick={() => setPropertyType('Residential')}
-                        className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                          propertyType === 'Residential'
-                            ? 'bg-[#0052CC] text-white shadow-xs'
-                            : 'text-[#475569] hover:text-[#0A2540]'
-                        }`}
-                      >
-                        <Home className="w-3.5 h-3.5" />
-                        <span>Home / Society</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setPropertyType('Commercial')}
-                        className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                          propertyType === 'Commercial'
-                            ? 'bg-[#0052CC] text-white shadow-xs'
-                            : 'text-[#475569] hover:text-[#0A2540]'
-                        }`}
-                      >
-                        <Building2 className="w-3.5 h-3.5" />
-                        <span>Commercial</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Full Name & Phone Number */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label
-                        htmlFor="hero-name"
-                        className="block text-xs font-semibold text-[#0A2540] mb-1"
-                      >
-                        Full Name *
-                      </label>
-                      <input
-                        id="hero-name"
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="e.g., Rajesh Sharma"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-[#F4F7FB] border border-[#E2E8F0] text-sm text-[#0A2540] focus:outline-none focus:border-[#0052CC] focus:bg-white transition-colors"
-                      />
-                      {errors.name && (
-                        <p className="text-[11px] text-red-600 mt-1">{errors.name}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label
-                        htmlFor="hero-phone"
-                        className="block text-xs font-semibold text-[#0A2540] mb-1"
-                      >
-                        WhatsApp / Mobile *
-                      </label>
-                      <input
-                        id="hero-phone"
-                        type="tel"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        placeholder="10-digit mobile"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-[#F4F7FB] border border-[#E2E8F0] text-sm text-[#0A2540] focus:outline-none focus:border-[#0052CC] focus:bg-white transition-colors"
-                      />
-                      {errors.phone && (
-                        <p className="text-[11px] text-red-600 mt-1">{errors.phone}</p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Locality / Pin Code in Indore */}
-                  <div>
-                    <label
-                      htmlFor="hero-area"
-                      className="block text-xs font-semibold text-[#0A2540] mb-1"
-                    >
-                      Locality / Pin Code in Indore *
-                    </label>
-                    <input
-                      id="hero-area"
-                      type="text"
-                      value={cityArea}
-                      onChange={(e) => setCityArea(e.target.value)}
-                      placeholder="e.g., Vijay Nagar, Rau, Nipania (452010)"
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-[#F4F7FB] border border-[#E2E8F0] text-sm text-[#0A2540] focus:outline-none focus:border-[#0052CC] focus:bg-white transition-colors"
-                    />
-                    {errors.cityArea && (
-                      <p className="text-[11px] text-red-600 mt-1">{errors.cityArea}</p>
-                    )}
-                  </div>
-
-                  {/* Monthly Electricity Bill Chips */}
-                  <div>
-                    <label className="block text-xs font-semibold text-[#0A2540] mb-1.5">
-                      Average Monthly Electricity Bill *
-                    </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {BILL_BRACKETS.map((bracket) => {
-                        const active = billRange === bracket.value;
-                        return (
-                          <button
-                            key={bracket.label}
-                            type="button"
-                            onClick={() => setBillRange(bracket.value)}
-                            className={`py-2 px-3 rounded-xl text-xs font-semibold border text-left transition-all flex items-center justify-between cursor-pointer ${
-                              active
-                                ? 'bg-[#0052CC]/10 border-[#0052CC] text-[#0052CC] font-bold'
-                                : 'bg-[#F4F7FB] border-[#E2E8F0] text-[#475569] hover:border-slate-300'
-                            }`}
-                          >
-                            <span>{bracket.label}</span>
-                            {active && <CheckCircle2 className="w-3.5 h-3.5 text-[#0052CC] shrink-0" />}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  <button
-                    type="submit"
-                    data-testid="hero-consultation-submit"
-                    className="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-sm font-bold text-white bg-[#0052CC] hover:bg-[#003E99] transition-all shadow-md hover:shadow-lg cursor-pointer"
-                  >
-                    <span>Get Free Quote & Subsidy Check</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-
-                  <p className="text-[11px] text-[#475569] text-center leading-normal">
-                    *Subsidy subject to MNRE PM Surya Ghar portal norms & residential net-metering eligibility.
-                  </p>
-                </form>
-              )}
-            </div>
-          </motion.div>
+            <a
+              href="#intro"
+              className="inline-flex items-center gap-2 text-white/85 hover:text-[#F4B942] transition-colors whitespace-nowrap shrink-0"
+            >
+              <span>Scroll to explore</span>
+              <ArrowDown className="w-3.5 h-3.5" aria-hidden="true" />
+            </a>
+          </div>
         </div>
       </div>
     </section>

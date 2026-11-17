@@ -1,41 +1,64 @@
 import React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Calculator } from 'lucide-react';
+import { ArrowRight, MessageCircle } from 'lucide-react';
+import { SOLAR_IMAGES } from '@/lib/images';
+import { buildWhatsAppUrl, formatGeneralWhatsAppMessage } from '@/lib/whatsapp';
+import { Reveal } from './Reveal';
 
-export default function CTASection() {
+export function CTASection() {
+  const whatsappUrl = buildWhatsAppUrl(formatGeneralWhatsAppMessage());
+
   return (
-    <section className="py-16 sm:py-20 bg-[#0A2540] text-white border-t border-white/10">
-      <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-[#0052CC]/25 border border-white/15 rounded-2xl p-8 sm:p-12 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
-          <div className="max-w-2xl space-y-3">
-            <span className="inline-block text-xs font-mono uppercase tracking-wider text-[#FFB800] font-semibold">
-              Free Indore Rooftop Consultation
-            </span>
-            <h2 className="font-display font-bold text-2xl sm:text-4xl text-white tracking-tight">
-              Get a Custom Solar Layout, Subsidy & EMI Plan
-            </h2>
-            <p className="text-slate-200 text-sm sm:text-base leading-relaxed">
-              Our local engineering team evaluates your roof structure, shade profile, and monthly MPPKVVCL bill before recommending the ideal solar capacity.
-            </p>
-          </div>
+    <section className="relative py-24 md:py-32 bg-[#102D26] text-white overflow-hidden">
+      <div className="absolute inset-0">
+        <Image
+          src={SOLAR_IMAGES.sunsetCta.src}
+          alt={SOLAR_IMAGES.sunsetCta.alt}
+          width={SOLAR_IMAGES.sunsetCta.width}
+          height={SOLAR_IMAGES.sunsetCta.height}
+          loading="eager"
+          referrerPolicy="no-referrer"
+          className="w-full h-full object-cover object-center"
+        />
+      </div>
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-gradient-to-r from-[#102D26]/95 via-[#102D26]/82 to-[#102D26]/65"
+      />
 
-          <div className="flex flex-wrap items-center gap-4 shrink-0">
-            <Link
-              href="/#calculator"
-              className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl text-sm font-bold text-white bg-white/10 hover:bg-white/15 border border-white/20 transition-colors"
-            >
-              <Calculator className="w-4 h-4 text-[#FFB800]" />
-              <span>Savings & EMI Calculator</span>
-            </Link>
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold text-[#0A2540] bg-[#FFB800] hover:bg-[#E6A600] transition-colors shadow-md"
-            >
-              <span>Schedule Site Visit</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+      <div className="relative z-10 max-w-[1280px] mx-auto px-5 sm:px-8">
+        <Reveal>
+          <div className="max-w-2xl">
+            <p className="text-xs font-semibold tracking-wider uppercase text-[#F4B942] mb-3">
+              Indore · Madhya Pradesh
+            </p>
+            <h2 className="font-display text-3xl sm:text-5xl font-bold tracking-tight text-white text-balance leading-[1.1] mb-5">
+              Ready to Make the Switch to Solar?
+            </h2>
+            <p className="text-base sm:text-lg text-white/80 leading-relaxed mb-8">
+              Let&apos;s explore a smarter energy solution for your home or business.
+            </p>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-sm sm:text-base font-semibold text-[#102D26] bg-[#F4B942] hover:bg-[#eab035] rounded-md transition-colors whitespace-nowrap"
+              >
+                <span>Get Free Consultation</span>
+                <ArrowRight className="w-4 h-4" aria-hidden="true" />
+              </Link>
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-sm sm:text-base font-medium text-white border border-white/35 hover:bg-white/10 rounded-md transition-colors whitespace-nowrap"
+              >
+                <MessageCircle className="w-4 h-4 text-[#25D366]" aria-hidden="true" />
+                <span>Chat on WhatsApp</span>
+              </a>
+            </div>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

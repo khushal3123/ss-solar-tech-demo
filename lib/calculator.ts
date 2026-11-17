@@ -1,7 +1,6 @@
 import { CALCULATOR_CONFIG, type CalculatorConfig } from './config';
 
 export type PropertyType = 'Residential' | 'Commercial';
-export type EmiTenureMonths = 6 | 36 | 60;
 
 export interface SolarCalculatorInput {
   monthlyBillInr: number;
@@ -10,16 +9,6 @@ export interface SolarCalculatorInput {
   propertyType: PropertyType;
   availableRooftopSqFt?: number | null;
   unitsPerKwPerMonth?: number;
-  applySubsidy?: boolean;
-  emiTenureMonths?: EmiTenureMonths;
-}
-
-export interface EmiBreakdown {
-  tenureMonths: EmiTenureMonths;
-  downPaymentInr: number;
-  loanAmountInr: number;
-  monthlyEmiInr: number;
-  annualInterestRatePercent: number;
 }
 
 export interface SolarCalculatorResult {
@@ -34,14 +23,11 @@ export interface SolarCalculatorResult {
   estimatedAnnualSavingsInr: number;
   estimatedCostPerKwInr: number | null;
   estimatedSystemCostInr: number | null;
-  indicativeSubsidyInr: number;
-  netEstimatedSystemCostInr: number | null;
   indicativePaybackYears: number | null;
   estimatedRequiredAreaSqFt: number;
   rooftopSqFtPerKw: number;
   maxCapacityByAreaKw: number | null;
   isAreaConstrained: boolean;
-  emi: EmiBreakdown | null;
 }
 
 export function roundToStep(value: number, step: number): number {
@@ -56,71 +42,6 @@ export function roundUpToStep(value: number, step: number): number {
     return 0;
   }
   return Math.ceil(Number((value / step).toFixed(6))) * step;
-}
-
-/**
- * Calculates indicative PM Surya Ghar residential rooftop subsidy in INR:
- * - Up to 2 kW: ₹30,000 per kW (e.g., 1 kW = ₹30,000, 2 kW = ₹60,000)
- * - Additional capacity up to 3 kW: ₹18,000 for the 3rd kW (3 kW = ₹78,000)
- * - Above 3 kW: Capped at ₹78,000
- * - Commercial properties: ₹0
- */
-export function calculateIndicativeSubsidyInr(
-  capacityKw: number,
-  propertyType: PropertyType,
-  applySubsidy: boolean = true
-): number {
-  if (!applySubsidy || propertyType !== 'Residential' || !Number.isFinite(capacityKw) || capacityKw <= 0) {
-    return 0;
-  }
-  if (capacityKw <= 2) {
-    return Math.round(capacityKw * 30000);
-  }
-  if (capacityKw < 3) {
-    return Math.round(60000 + (capacityKw - 2) * 18000);
-  }
-  return 78000;
-}
-
-/**
- * Computes indicative monthly EMI for a given net system cost and tenure (6, 36, or 60 months).
- * Assumes 20% down payment and 80% financed amount:
- * - 6 months: 0% promotional short-term tenure
- * - 36 or 60 months: 9.5% p.a. reducing-balance indicative solar loan rate
- */
-export function calculateEmiBreakdown(
-  netSystemCostInr: number | null,
-  tenureMonths: EmiTenureMonths = 36
-): EmiBreakdown | null {
-  if (netSystemCostInr === null || !Number.isFinite(netSystemCostInr) || netSystemCostInr <= 0) {
-    return null;
-  }
-
-  const downPaymentInr = Math.round(netSystemCostInr * 0.2);
-  const loanAmountInr = Math.max(0, netSystemCostInr - downPaymentInr);
-
-  if (tenureMonths === 6) {
-    return {
-      tenureMonths: 6,
-      downPaymentInr,
-      loanAmountInr,
-      monthlyEmiInr: Math.round(loanAmountInr / 6),
-      annualInterestRatePercent: 0,
-    };
-  }
-
-  const annualRate = 9.5;
-  const monthlyRate = annualRate / 12 / 100;
-  const factor = Math.pow(1 + monthlyRate, tenureMonths);
-  const emi = (loanAmountInr * monthlyRate * factor) / (factor - 1);
-
-  return {
-    tenureMonths,
-    downPaymentInr,
-    loanAmountInr,
-    monthlyEmiInr: Math.round(emi),
-    annualInterestRatePercent: annualRate,
-  };
 }
 
 export function calculateSolarEstimate(
@@ -169,10 +90,6 @@ export function calculateSolarEstimate(
       ? rawCostPerKw
       : null;
 
-  const applySubsidy =
-    input.applySubsidy !== undefined ? input.applySubsidy : propertyType === 'Residential';
-  const emiTenureMonths: EmiTenureMonths = input.emiTenureMonths ?? 36;
-
   let effectiveMonthlyUnits = 0;
   let effectiveMonthlyBillInr = 0;
 
@@ -197,14 +114,11 @@ export function calculateSolarEstimate(
       estimatedAnnualSavingsInr: 0,
       estimatedCostPerKwInr: costPerKw,
       estimatedSystemCostInr: null,
-      indicativeSubsidyInr: 0,
-      netEstimatedSystemCostInr: null,
       indicativePaybackYears: null,
       estimatedRequiredAreaSqFt: 0,
       rooftopSqFtPerKw: roofSqFtPerKw,
       maxCapacityByAreaKw: null,
       isAreaConstrained: false,
-      emi: null,
     };
   }
 
@@ -225,22 +139,9 @@ export function calculateSolarEstimate(
   const estimatedSystemCostInr =
     costPerKw !== null ? Math.round(recommendedCapacityKw * costPerKw) : null;
 
-  const indicativeSubsidyInr =
-    estimatedSystemCostInr !== null
-      ? Math.min(
-          estimatedSystemCostInr,
-          calculateIndicativeSubsidyInr(recommendedCapacityKw, propertyType, applySubsidy)
-        )
-      : 0;
-
-  const netEstimatedSystemCostInr =
-    estimatedSystemCostInr !== null
-      ? Math.max(0, estimatedSystemCostInr - indicativeSubsidyInr)
-      : null;
-
   const indicativePaybackYears =
-    netEstimatedSystemCostInr !== null && estimatedAnnualSavingsInr > 0
-      ? Number((netEstimatedSystemCostInr / estimatedAnnualSavingsInr).toFixed(1))
+    estimatedSystemCostInr !== null && estimatedAnnualSavingsInr > 0
+      ? Number((estimatedSystemCostInr / estimatedAnnualSavingsInr).toFixed(1))
       : null;
 
   const estimatedRequiredAreaSqFt = Math.round(recommendedCapacityKw * roofSqFtPerKw);
@@ -263,8 +164,6 @@ export function calculateSolarEstimate(
   const isAreaConstrained =
     maxCapacityByAreaKw !== null && recommendedCapacityKw > maxCapacityByAreaKw;
 
-  const emi = calculateEmiBreakdown(netEstimatedSystemCostInr, emiTenureMonths);
-
   return {
     hasValidInput: true,
     propertyType,
@@ -277,14 +176,11 @@ export function calculateSolarEstimate(
     estimatedAnnualSavingsInr,
     estimatedCostPerKwInr: costPerKw,
     estimatedSystemCostInr,
-    indicativeSubsidyInr,
-    netEstimatedSystemCostInr,
     indicativePaybackYears,
     estimatedRequiredAreaSqFt,
     rooftopSqFtPerKw: roofSqFtPerKw,
     maxCapacityByAreaKw,
     isAreaConstrained,
-    emi,
   };
 }
 
