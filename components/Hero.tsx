@@ -4,7 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'motion/react';
-import { ArrowDown, ArrowRight, Calculator } from 'lucide-react';
+import { ArrowRight, Calculator, ChevronDown } from 'lucide-react';
 import { SOLAR_IMAGES } from '@/lib/images';
 
 export function Hero() {
@@ -61,7 +61,7 @@ export function Hero() {
         </svg>
       </motion.div>
 
-      <div className="relative z-10 w-full max-w-[1280px] mx-auto px-5 sm:px-8 pt-28 pb-12 md:pb-18">
+      <div className="relative z-10 w-full max-w-[1280px] mx-auto px-5 sm:px-8 pt-28 pb-12 md:pb-16">
         <div className="max-w-3xl">
           {/* Clean unboxed location indicator (zero pill clutter) */}
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm font-medium tracking-wide text-[#F4B942] mb-5">
@@ -98,17 +98,34 @@ export function Hero() {
             </Link>
           </div>
 
-          {/* Quiet trust footer row */}
+          {/* Quiet trust footer row with animated Liquid Glass Scroll Down indicator */}
           <div className="mt-10 pt-6 border-t border-white/15 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs sm:text-sm text-white/75">
             <p>
               Residential, commercial &amp; industrial rooftop solar systems tailored to your property&apos;s electricity load.
             </p>
             <a
               href="#intro"
-              className="inline-flex items-center gap-2 text-white/85 hover:text-[#F4B942] transition-colors whitespace-nowrap shrink-0"
+              aria-label="Scroll down to explore solar solutions"
+              data-testid="hero-scroll-indicator"
+              className="group inline-flex items-center gap-3 self-start sm:self-auto pl-4 pr-2.5 py-1.5 rounded-full bg-white/5 backdrop-blur-lg border border-white/15 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)] text-white/90 hover:text-[#F4B942] hover:border-[#F4B942]/40 transition-all duration-200 whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F4B942]"
             >
-              <span>Scroll to explore</span>
-              <ArrowDown className="w-3.5 h-3.5" aria-hidden="true" />
+              <span className="text-xs font-medium tracking-wide">Scroll to explore</span>
+              <span className="relative inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F4B942]/15 border border-[#F4B942]/35 text-[#F4B942]">
+                <motion.span
+                  aria-hidden="true"
+                  className="absolute inset-0 rounded-full border border-[#F4B942]/50"
+                  animate={{ scale: [1, 1.35, 1], opacity: [0.65, 0, 0.65] }}
+                  transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+                />
+                <motion.span
+                  aria-hidden="true"
+                  animate={{ y: [0, 3, 0] }}
+                  transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+                  className="inline-flex items-center justify-center"
+                >
+                  <ChevronDown className="w-4 h-4" />
+                </motion.span>
+              </span>
             </a>
           </div>
         </div>
