@@ -131,37 +131,47 @@ export function SolarCalculator() {
   const sliderValue = Math.min(Math.max(parsedBill, 1000), 100000);
 
   return (
-    <section id="calculator" className="py-20 md:py-28 bg-[#F4F6EF]">
-      <div className="max-w-[1280px] mx-auto px-5 sm:px-8">
+    <section id="calculator" className="scroll-mt-24 relative py-20 md:py-28 bg-[#0F2626] text-white overflow-hidden">
+      {/* Ambient radial light behind glass calculator */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-20 left-1/4 w-[520px] h-[520px] rounded-full bg-[#246B50]/25 blur-[130px]"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-0 right-1/4 w-[440px] h-[440px] rounded-full bg-[#F4B942]/12 blur-[120px]"
+      />
+
+      <div className="relative z-10 max-w-[1280px] mx-auto px-5 sm:px-8">
         <Reveal>
           <div className="max-w-2xl mb-12">
-            <p className="text-xs font-semibold tracking-wider uppercase text-[#246B50] mb-3">
+            <p className="text-xs font-semibold tracking-wider uppercase text-[#F4B942] mb-3">
               Interactive Estimate
             </p>
-            <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-[#102D26] text-balance mb-4">
+            <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white text-balance mb-4">
               Discover How Much You Could Save with Solar.
             </h2>
-            <p className="text-base text-[#4F5E57] leading-relaxed">
+            <p className="text-base text-white/75 leading-relaxed">
               Switch between Residential and Commercial presets or enter your electricity details to explore your potential solar savings.
             </p>
           </div>
         </Reveal>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-          {/* Left Panel: Inputs */}
+          {/* Left Panel: Glass Inputs Container */}
           <Reveal className="lg:col-span-6 flex">
-            <div className="w-full bg-white border border-[#E4E9E1] rounded-lg p-6 sm:p-9 flex flex-col justify-between">
+            <div className="w-full bg-white/5 backdrop-blur-lg border border-white/15 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)] rounded-2xl p-6 sm:p-9 flex flex-col justify-between">
               <div className="space-y-6">
                 {/* Property Type Segmented Control */}
                 <div>
                   <div className="flex items-center justify-between mb-2.5">
-                    <span className="text-sm font-semibold text-[#102D26]">
+                    <span className="text-sm font-semibold text-white">
                       Property Type
                     </span>
                     <button
                       type="button"
                       onClick={handleReset}
-                      className="inline-flex items-center gap-1.5 text-xs font-medium text-[#64736C] hover:text-[#102D26] transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1.5 text-xs font-medium text-white/70 hover:text-[#F4B942] transition-colors cursor-pointer"
                     >
                       <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
                       <span>Reset {propertyType.toLowerCase()} defaults</span>
@@ -170,7 +180,7 @@ export function SolarCalculator() {
                   <div
                     role="group"
                     aria-label="Property type"
-                    className="grid grid-cols-2 gap-1.5 p-1 bg-[#F4F6EF] border border-[#E4E9E1] rounded-md relative z-10"
+                    className="grid grid-cols-2 gap-1.5 p-1 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl relative z-10"
                   >
                     {(['Residential', 'Commercial'] as const).map((type) => (
                       <button
@@ -180,17 +190,17 @@ export function SolarCalculator() {
                         onClick={() => handlePropertySwitch(type)}
                         aria-pressed={propertyType === type}
                         className={cn(
-                          'py-2.5 px-4 text-sm font-semibold rounded transition-colors whitespace-nowrap cursor-pointer',
+                          'py-2.5 px-4 text-sm font-semibold rounded-lg transition-all duration-200 whitespace-nowrap cursor-pointer',
                           propertyType === type
-                            ? 'bg-[#102D26] text-white shadow-xs'
-                            : 'text-[#4F5E57] hover:text-[#102D26]'
+                            ? 'bg-[#F4B942] text-[#102D26] shadow-xs'
+                            : 'text-white/80 hover:text-white hover:bg-white/5'
                         )}
                       >
                         {type}
                       </button>
                     ))}
                   </div>
-                  <p className="mt-2 text-xs text-[#64736C]">
+                  <p className="mt-2 text-xs text-white/65">
                     {propertyType === 'Residential'
                       ? 'Residential preset: ₹4,500/mo bill • ₹8/unit tariff • 120 units/kW/mo'
                       : 'Commercial preset: ₹25,000/mo bill • ₹10/unit tariff • 125 units/kW/mo'}
@@ -202,18 +212,18 @@ export function SolarCalculator() {
                   <div className="flex items-baseline justify-between gap-4 mb-2">
                     <label
                       htmlFor="calc-monthly-bill"
-                      className="text-sm font-semibold text-[#102D26]"
+                      className="text-sm font-semibold text-white"
                     >
                       Average Monthly Electricity Bill (₹)
                     </label>
-                    <span className="text-xs text-[#64736C] tabular-nums">
+                    <span className="text-xs text-[#F4B942] font-medium tabular-nums">
                       {parsedBill > 0 ? formatInr(parsedBill) : '₹0'} / mo
                     </span>
                   </div>
                   <div className="relative">
                     <span
                       aria-hidden="true"
-                      className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-medium text-[#64736C]"
+                      className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-medium text-white/60"
                     >
                       ₹
                     </span>
@@ -226,7 +236,7 @@ export function SolarCalculator() {
                       value={billInput}
                       onChange={(e) => handleBillChange(e.target.value)}
                       placeholder={propertyType === 'Residential' ? 'e.g. 4500' : 'e.g. 25000'}
-                      className="w-full pl-8 pr-4 py-2.5 text-base font-medium text-[#102D26] bg-[#F4F6EF]/60 border border-[#E4E9E1] rounded-md tabular-nums focus:outline-none focus:border-[#246B50] focus:bg-white transition-colors"
+                      className="w-full pl-8 pr-4 py-2.5 text-base font-medium text-white placeholder:text-white/45 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg tabular-nums focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400/50 transition-colors"
                     />
                   </div>
                   <input
@@ -237,9 +247,9 @@ export function SolarCalculator() {
                     step={500}
                     value={sliderValue}
                     onChange={(e) => handleBillChange(e.target.value)}
-                    className="w-full mt-3 accent-[#246B50] cursor-pointer"
+                    className="w-full mt-3 accent-[#F4B942] cursor-pointer"
                   />
-                  <div className="flex justify-between text-[11px] text-[#64736C] tabular-nums mt-1">
+                  <div className="flex justify-between text-[11px] text-white/60 tabular-nums mt-1">
                     <span>₹1,000</span>
                     <span>₹50,000</span>
                     <span>₹1,00,000+</span>
@@ -251,7 +261,7 @@ export function SolarCalculator() {
                   <div>
                     <label
                       htmlFor="calc-tariff"
-                      className="block text-sm font-semibold text-[#102D26] mb-2"
+                      className="block text-sm font-semibold text-white mb-2"
                     >
                       Average Electricity Rate (₹ / unit)
                     </label>
@@ -265,14 +275,14 @@ export function SolarCalculator() {
                       value={tariffInput}
                       onChange={(e) => handleTariffChange(e.target.value)}
                       placeholder={String(activePreset.defaultTariffPerUnitInr)}
-                      className="w-full px-3.5 py-2.5 text-base font-medium text-[#102D26] bg-[#F4F6EF]/60 border border-[#E4E9E1] rounded-md tabular-nums focus:outline-none focus:border-[#246B50] focus:bg-white transition-colors"
+                      className="w-full px-3.5 py-2.5 text-base font-medium text-white placeholder:text-white/45 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg tabular-nums focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400/50 transition-colors"
                     />
                   </div>
 
                   <div>
                     <label
                       htmlFor="calc-units"
-                      className="block text-sm font-semibold text-[#102D26] mb-2"
+                      className="block text-sm font-semibold text-white mb-2"
                     >
                       Monthly Consumption (units)
                     </label>
@@ -285,20 +295,20 @@ export function SolarCalculator() {
                       value={unitsInput}
                       onChange={(e) => handleUnitsChange(e.target.value)}
                       placeholder="e.g. 560"
-                      className="w-full px-3.5 py-2.5 text-base font-medium text-[#102D26] bg-[#F4F6EF]/60 border border-[#E4E9E1] rounded-md tabular-nums focus:outline-none focus:border-[#246B50] focus:bg-white transition-colors"
+                      className="w-full px-3.5 py-2.5 text-base font-medium text-white placeholder:text-white/45 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg tabular-nums focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400/50 transition-colors"
                     />
                   </div>
                 </div>
 
                 {/* Optional Rooftop Area & Editable Generation Assumption */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-2 border-t border-[#E4E9E1] items-end">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-3 border-t border-white/15 items-end">
                   <div>
                     <label
                       htmlFor="calc-area"
-                      className="block text-sm font-semibold text-[#102D26] mb-2 whitespace-nowrap"
+                      className="block text-sm font-semibold text-white mb-2 whitespace-nowrap"
                     >
                       Rooftop Area (sq. ft.)
-                      <span className="ml-1.5 text-xs font-normal text-[#64736C]">Optional</span>
+                      <span className="ml-1.5 text-xs font-normal text-white/60">Optional</span>
                     </label>
                     <input
                       id="calc-area"
@@ -309,14 +319,14 @@ export function SolarCalculator() {
                       value={rooftopAreaInput}
                       onChange={(e) => setRooftopAreaInput(e.target.value)}
                       placeholder="e.g. 500"
-                      className="w-full px-3.5 py-2.5 text-base font-medium text-[#102D26] bg-[#F4F6EF]/60 border border-[#E4E9E1] rounded-md tabular-nums focus:outline-none focus:border-[#246B50] focus:bg-white transition-colors"
+                      className="w-full px-3.5 py-2.5 text-base font-medium text-white placeholder:text-white/45 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg tabular-nums focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400/50 transition-colors"
                     />
                   </div>
 
                   <div>
                     <label
                       htmlFor="calc-factor"
-                      className="block text-sm font-semibold text-[#102D26] mb-2 whitespace-nowrap"
+                      className="block text-sm font-semibold text-white mb-2 whitespace-nowrap"
                     >
                       Generation Factor (u/kW/mo)
                     </label>
@@ -329,13 +339,13 @@ export function SolarCalculator() {
                       inputMode="numeric"
                       value={generationFactorInput}
                       onChange={(e) => setGenerationFactorInput(e.target.value)}
-                      className="w-full px-3.5 py-2.5 text-base font-medium text-[#102D26] bg-[#F4F6EF]/60 border border-[#E4E9E1] rounded-md tabular-nums focus:outline-none focus:border-[#246B50] focus:bg-white transition-colors"
+                      className="w-full px-3.5 py-2.5 text-base font-medium text-white placeholder:text-white/45 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg tabular-nums focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400/50 transition-colors"
                     />
                   </div>
                 </div>
               </div>
 
-              <p className="mt-6 text-xs text-[#64736C] leading-relaxed">
+              <p className="mt-6 text-xs text-white/65 leading-relaxed">
                 {propertyType} estimate assumes ~{result.unitsPerKwPerMonth} units/kW/month generation and an indicative cost benchmark of{' '}
                 {result.estimatedCostPerKwInr
                   ? `${formatInr(result.estimatedCostPerKwInr)}/kW`
@@ -345,9 +355,9 @@ export function SolarCalculator() {
             </div>
           </Reveal>
 
-          {/* Right Panel: Results Ledger */}
+          {/* Right Panel: Glass Results Ledger */}
           <Reveal delay={0.1} className="lg:col-span-6 flex">
-            <div className="w-full bg-[#102D26] text-white rounded-lg p-6 sm:p-9 flex flex-col justify-between">
+            <div className="w-full bg-white/5 backdrop-blur-lg border border-white/15 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)] text-white rounded-2xl p-6 sm:p-9 flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between gap-4 pb-5 border-b border-white/15">
                   <span className="text-xs font-semibold tracking-wider uppercase text-[#F4B942]">
@@ -355,7 +365,7 @@ export function SolarCalculator() {
                   </span>
                   <span
                     data-testid="calc-active-profile"
-                    className="text-xs font-medium text-white/80 bg-white/10 px-2.5 py-1 rounded"
+                    className="text-xs font-medium text-white/90 bg-white/10 backdrop-blur-md border border-white/15 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)] px-3 py-1 rounded-full"
                   >
                     {propertyType} Profile
                   </span>
@@ -393,7 +403,7 @@ export function SolarCalculator() {
                         </span>
                       </div>
                       {result.isAreaConstrained && result.maxCapacityByAreaKw !== null && (
-                        <div className="mt-3.5 flex items-start gap-2 text-xs text-[#F4B942]/95 bg-white/5 border border-[#F4B942]/30 rounded-md p-3">
+                        <div className="mt-3.5 flex items-start gap-2 text-xs text-[#F4B942]/95 bg-white/5 border border-[#F4B942]/30 rounded-lg p-3">
                           <Info className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
                           <span>
                             Based on {parsedArea} sq. ft. entered, usable rooftop space may support up to ~{result.maxCapacityByAreaKw} kW with standard layouts. A site inspection can evaluate elevated structures or high-wattage modules.
@@ -489,7 +499,7 @@ export function SolarCalculator() {
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center gap-2.5 px-6 py-3.5 text-sm sm:text-base font-semibold text-[#102D26] bg-[#F4B942] hover:bg-[#eab035] rounded-md transition-colors whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F4B942]"
+                  className="w-full inline-flex items-center justify-center gap-2.5 px-6 py-3.5 text-sm sm:text-base font-semibold text-[#102D26] bg-[#F4B942] hover:bg-[#eab035] rounded-lg shadow-[0_4px_20px_rgba(244,185,66,0.28)] transition-all duration-200 whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F4B942]"
                 >
                   <MessageCircle className="w-4 h-4" aria-hidden="true" />
                   <span>Get My Personalized Solar Quote</span>

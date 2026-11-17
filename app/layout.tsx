@@ -108,7 +108,7 @@ export default function RootLayout({
 
   return (
     <html lang="en" className={`${jakarta.variable} ${manrope.variable}`}>
-      <body className="min-h-screen flex flex-col bg-[#F4F6EF] text-[#17251F] selection:bg-[#F4B942]/30 selection:text-[#102D26]">
+      <body className="min-h-screen flex flex-col bg-[#0F2626] text-white selection:bg-[#F4B942]/30 selection:text-white">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}

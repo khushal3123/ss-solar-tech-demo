@@ -8,14 +8,14 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    background-color: #F4F6EF;
-    color: #17251F;
+    background-color: #0F2626;
+    color: #F4F6EF;
   }
 
   body {
     font-family: var(--font-sans);
-    background-color: #F4F6EF;
-    color: #17251F;
+    background-color: #0F2626;
+    color: #F4F6EF;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

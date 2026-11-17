@@ -83,50 +83,50 @@ export default function PricingPage() {
       <PricingSection showAllLink={false} />
 
       {/* Package Comparison Table */}
-      <section className="py-20 md:py-24 bg-[#F4F6EF]">
+      <section className="py-20 md:py-24 bg-[#0F2626] text-white">
         <div className="max-w-[1280px] mx-auto px-5 sm:px-8">
           <Reveal>
             <div className="max-w-2xl mb-10">
-              <p className="text-xs font-semibold tracking-wider uppercase text-[#246B50] mb-3">
+              <p className="text-xs font-semibold tracking-wider uppercase text-[#F4B942] mb-3">
                 Side-by-Side Comparison
               </p>
-              <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-[#102D26] text-balance mb-3">
+              <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white text-balance mb-3">
                 Indicative Configuration Comparison
               </h2>
-              <p className="text-sm sm:text-base text-[#4F5E57]">
+              <p className="text-sm sm:text-base text-white/75">
                 All figures shown are illustrative demo specifications to help you understand typical sizing tiers. Actual pricing is issued only after site assessment.
               </p>
             </div>
           </Reveal>
 
           <Reveal delay={0.08}>
-            <div className="overflow-x-auto bg-white border border-[#E4E9E1] rounded-lg">
+            <div className="overflow-x-auto bg-white/5 backdrop-blur-lg border border-white/15 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)] rounded-2xl">
               <table className="w-full text-left border-collapse min-w-[680px]">
                 <thead>
-                  <tr className="border-b border-[#E4E9E1] bg-[#F4F6EF]/70">
-                    <th className="py-4 px-5 text-xs font-semibold uppercase tracking-wider text-[#64736C]">
+                  <tr className="border-b border-white/15 bg-white/5">
+                    <th className="py-4 px-5 text-xs font-semibold uppercase tracking-wider text-[#F4B942]">
                       Specification
                     </th>
-                    <th className="py-4 px-5 font-display text-sm font-bold text-[#102D26]">
+                    <th className="py-4 px-5 font-display text-sm font-bold text-white">
                       Residential Essential
                     </th>
-                    <th className="py-4 px-5 font-display text-sm font-bold text-[#102D26] bg-[#102D26]/[0.04]">
+                    <th className="py-4 px-5 font-display text-sm font-bold text-[#F4B942] bg-white/[0.04]">
                       Residential Plus
                     </th>
-                    <th className="py-4 px-5 font-display text-sm font-bold text-[#102D26]">
+                    <th className="py-4 px-5 font-display text-sm font-bold text-white">
                       Commercial Custom
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#E4E9E1] text-sm">
+                <tbody className="divide-y divide-white/10 text-sm">
                   {COMPARISON_ROWS.map((row) => (
-                    <tr key={row.feature} className="hover:bg-[#F4F6EF]/40 transition-colors">
-                      <td className="py-4 px-5 font-medium text-[#102D26]">{row.feature}</td>
-                      <td className="py-4 px-5 text-[#4F5E57] tabular-nums">{row.essential}</td>
-                      <td className="py-4 px-5 text-[#102D26] font-medium bg-[#102D26]/[0.02] tabular-nums">
+                    <tr key={row.feature} className="hover:bg-white/[0.04] transition-colors">
+                      <td className="py-4 px-5 font-medium text-white">{row.feature}</td>
+                      <td className="py-4 px-5 text-white/75 tabular-nums">{row.essential}</td>
+                      <td className="py-4 px-5 text-white font-medium bg-white/[0.03] tabular-nums">
                         {row.plus}
                       </td>
-                      <td className="py-4 px-5 text-[#4F5E57] tabular-nums">{row.commercial}</td>
+                      <td className="py-4 px-5 text-white/75 tabular-nums">{row.commercial}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -136,7 +136,7 @@ export default function PricingPage() {
 
           {/* Custom Installation Quotation Block */}
           <Reveal delay={0.12}>
-            <div className="mt-12 bg-[#102D26] text-white rounded-lg p-8 sm:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+            <div className="mt-12 bg-white/5 backdrop-blur-lg border border-white/15 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)] text-white rounded-2xl p-8 sm:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
               <div className="max-w-2xl">
                 <p className="text-xs font-semibold tracking-wider uppercase text-[#F4B942] mb-2">
                   Custom Installation Quotation
@@ -153,14 +153,14 @@ export default function PricingPage() {
                   href={customQuoteWaUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-semibold text-[#102D26] bg-[#F4B942] hover:bg-[#eab035] rounded-md transition-colors whitespace-nowrap"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-semibold text-[#102D26] bg-[#F4B942] hover:bg-[#eab035] rounded-lg shadow-[0_4px_16px_rgba(244,185,66,0.28)] transition-colors whitespace-nowrap"
                 >
                   <MessageCircle className="w-4 h-4" aria-hidden="true" />
                   <span>Request Custom Quote</span>
                 </a>
                 <Link
                   href="/#calculator"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-medium text-white border border-white/30 hover:bg-white/10 rounded-md transition-colors whitespace-nowrap"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-medium text-white bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/15 rounded-lg transition-colors whitespace-nowrap"
                 >
                   <span>Try Savings Calculator</span>
                   <ArrowRight className="w-4 h-4" aria-hidden="true" />

@@ -84,14 +84,14 @@ export function Hero() {
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
             <a
               href="#calculator"
-              className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 text-sm sm:text-base font-semibold text-[#102D26] bg-[#F4B942] hover:bg-[#eab035] rounded-md transition-colors duration-200 whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F4B942]"
+              className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 text-sm sm:text-base font-semibold text-[#102D26] bg-[#F4B942] hover:bg-[#eab035] rounded-lg shadow-[0_4px_20px_rgba(244,185,66,0.28)] transition-all duration-200 whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F4B942]"
             >
               <Calculator className="w-4 h-4" aria-hidden="true" />
               <span>Calculate Your Savings</span>
             </a>
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-sm sm:text-base font-medium text-white border border-white/40 bg-[#102D26]/40 hover:bg-white/10 rounded-md transition-colors duration-200 whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-sm sm:text-base font-medium text-white bg-white/5 backdrop-blur-lg border border-white/15 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)] hover:bg-white/10 rounded-lg transition-all duration-200 whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               <span>Get Free Consultation</span>
               <ArrowRight className="w-4 h-4" aria-hidden="true" />

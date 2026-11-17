@@ -86,31 +86,31 @@ export default function TermsPage() {
         breadcrumbLabel="Terms & Conditions"
       />
 
-      <section className="py-16 md:py-24 bg-[#F4F6EF]">
+      <section className="py-16 md:py-24 bg-[#0F2626] text-white">
         <div className="max-w-[920px] mx-auto px-5 sm:px-8">
-          <div className="bg-white border border-[#E4E9E1] rounded-lg p-6 sm:p-10 md:p-12">
-            <div className="mb-8 p-4 bg-[#F4F6EF] border border-[#E4E9E1] rounded-md text-xs sm:text-sm text-[#4F5E57]">
-              <strong className="text-[#102D26]">Demo Document Notice:</strong> Effective Date Placeholder — 2026. Do not rely on these placeholder clauses as finalized legal advice without formal business review.
+          <div className="bg-white/5 backdrop-blur-lg border border-white/15 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)] rounded-2xl p-6 sm:p-10 md:p-12">
+            <div className="mb-8 p-4 bg-white/5 border border-white/15 rounded-xl text-xs sm:text-sm text-white/80">
+              <strong className="text-[#F4B942]">Demo Document Notice:</strong> Effective Date Placeholder — 2026. Do not rely on these placeholder clauses as finalized legal advice without formal business review.
             </div>
 
-            <div className="divide-y divide-[#E4E9E1]">
+            <div className="divide-y divide-white/15">
               {SECTIONS.map((sec) => (
                 <section key={sec.id} id={sec.id} className="py-6 first:pt-0 last:pb-0 scroll-mt-24">
-                  <h2 className="font-display text-lg sm:text-xl font-bold text-[#102D26] mb-2.5">
+                  <h2 className="font-display text-lg sm:text-xl font-bold text-white mb-2.5">
                     {sec.title}
                   </h2>
-                  <p className="text-sm sm:text-base text-[#4F5E57] leading-relaxed">
+                  <p className="text-sm sm:text-base text-white/75 leading-relaxed">
                     {sec.content}
                   </p>
                 </section>
               ))}
             </div>
 
-            <div className="mt-10 pt-6 border-t border-[#E4E9E1] flex flex-wrap items-center justify-between gap-4 text-sm">
-              <Link href="/contact" className="font-semibold text-[#102D26] hover:text-[#246B50]">
+            <div className="mt-10 pt-6 border-t border-white/15 flex flex-wrap items-center justify-between gap-4 text-sm">
+              <Link href="/contact" className="font-semibold text-[#F4B942] hover:text-amber-300">
                 Go to Contact Page
               </Link>
-              <Link href="/" className="text-[#4F5E57] hover:text-[#102D26]">
+              <Link href="/" className="text-white/75 hover:text-white">
                 Back to Home
               </Link>
             </div>

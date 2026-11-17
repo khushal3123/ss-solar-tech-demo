@@ -29,73 +29,82 @@ export default function ContactPage() {
         breadcrumbLabel="Contact"
       />
 
-      <section className="py-16 md:py-24 bg-[#F4F6EF]">
-        <div className="max-w-[1280px] mx-auto px-5 sm:px-8">
+      <section className="relative py-16 md:py-24 bg-[#0F2626] text-white overflow-hidden">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute top-10 left-1/4 w-[480px] h-[480px] rounded-full bg-[#246B50]/25 blur-[130px]"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute bottom-10 right-10 w-[380px] h-[380px] rounded-full bg-[#F4B942]/12 blur-[120px]"
+        />
+
+        <div className="relative z-10 max-w-[1280px] mx-auto px-5 sm:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-            {/* Left 7 columns: Validated WhatsApp Enquiry Form */}
+            {/* Left 7 columns: Validated WhatsApp Enquiry Glass Form */}
             <div className="lg:col-span-7">
               <Reveal>
                 <ContactForm />
               </Reveal>
             </div>
 
-            {/* Right 5 columns: Indore Contact Information & Placeholder Map */}
+            {/* Right 5 columns: Indore Contact Information & Placeholder Map Glass Cards */}
             <div className="lg:col-span-5 space-y-6">
               <Reveal delay={0.08}>
-                <div className="bg-white border border-[#E4E9E1] rounded-lg p-6 sm:p-8 space-y-6">
+                <div className="bg-white/5 backdrop-blur-lg border border-white/15 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)] rounded-2xl p-6 sm:p-8 space-y-6 text-white">
                   <div>
-                    <p className="text-xs font-semibold tracking-wider uppercase text-[#246B50] mb-2">
+                    <p className="text-xs font-semibold tracking-wider uppercase text-[#F4B942] mb-2">
                       Office &amp; Service Region
                     </p>
-                    <h2 className="font-display text-xl font-bold text-[#102D26]">
+                    <h2 className="font-display text-xl font-bold text-white">
                       SS Solar — Indore
                     </h2>
                   </div>
 
-                  <ul className="space-y-4 text-sm text-[#4F5E57] border-t border-[#E4E9E1] pt-5">
+                  <ul className="space-y-4 text-sm text-white/80 border-t border-white/15 pt-5">
                     <li className="flex items-start gap-3">
-                      <MapPin className="w-4 h-4 text-[#246B50] shrink-0 mt-1" aria-hidden="true" />
+                      <MapPin className="w-4 h-4 text-[#F4B942] shrink-0 mt-1" aria-hidden="true" />
                       <div>
-                        <p className="font-semibold text-[#102D26]">Location</p>
+                        <p className="font-semibold text-white">Location</p>
                         <p>{SITE_CONFIG.contactPlaceholders.address}</p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <Phone className="w-4 h-4 text-[#246B50] shrink-0 mt-1" aria-hidden="true" />
+                      <Phone className="w-4 h-4 text-[#F4B942] shrink-0 mt-1" aria-hidden="true" />
                       <div>
-                        <p className="font-semibold text-[#102D26]">Phone</p>
+                        <p className="font-semibold text-white">Phone</p>
                         <p>{SITE_CONFIG.contactPlaceholders.phone}</p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <Mail className="w-4 h-4 text-[#246B50] shrink-0 mt-1" aria-hidden="true" />
+                      <Mail className="w-4 h-4 text-[#F4B942] shrink-0 mt-1" aria-hidden="true" />
                       <div>
-                        <p className="font-semibold text-[#102D26]">Email</p>
+                        <p className="font-semibold text-white">Email</p>
                         <p>{SITE_CONFIG.contactPlaceholders.email}</p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <MessageCircle className="w-4 h-4 text-[#246B50] shrink-0 mt-1" aria-hidden="true" />
+                      <MessageCircle className="w-4 h-4 text-[#F4B942] shrink-0 mt-1" aria-hidden="true" />
                       <div>
-                        <p className="font-semibold text-[#102D26]">WhatsApp</p>
+                        <p className="font-semibold text-white">WhatsApp</p>
                         <p>{SITE_CONFIG.contactPlaceholders.whatsapp}</p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <Clock className="w-4 h-4 text-[#246B50] shrink-0 mt-1" aria-hidden="true" />
+                      <Clock className="w-4 h-4 text-[#F4B942] shrink-0 mt-1" aria-hidden="true" />
                       <div>
-                        <p className="font-semibold text-[#102D26]">Service Area</p>
+                        <p className="font-semibold text-white">Service Area</p>
                         <p>Indore &amp; surrounding districts in Madhya Pradesh</p>
                       </div>
                     </li>
                   </ul>
 
-                  <div className="pt-4 border-t border-[#E4E9E1]">
+                  <div className="pt-4 border-t border-white/15">
                     <a
                       href={directWaUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold text-white bg-[#102D26] hover:bg-[#246B50] rounded-md transition-colors"
+                      className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold text-white bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/15 rounded-lg transition-colors"
                     >
                       <MessageCircle className="w-4 h-4 text-[#25D366]" aria-hidden="true" />
                       <span>Start Direct WhatsApp Chat</span>
@@ -106,8 +115,8 @@ export default function ContactPage() {
 
               {/* Placeholder Map Section for Indore */}
               <Reveal delay={0.14}>
-                <div className="bg-white border border-[#E4E9E1] rounded-lg overflow-hidden">
-                  <div className="relative h-60 bg-[#102D26] text-white p-6 flex flex-col justify-between overflow-hidden">
+                <div className="bg-white/5 backdrop-blur-lg border border-white/15 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)] rounded-2xl overflow-hidden">
+                  <div className="relative h-60 text-white p-6 flex flex-col justify-between overflow-hidden">
                     {/* Subtle architectural map grid lines */}
                     <svg
                       aria-hidden="true"

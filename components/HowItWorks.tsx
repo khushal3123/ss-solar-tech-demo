@@ -30,38 +30,34 @@ const STEPS = [
 
 export function HowItWorks() {
   return (
-    <section className="py-20 md:py-28 bg-white border-y border-[#E4E9E1]">
-      <div className="max-w-[1280px] mx-auto px-5 sm:px-8">
+    <section className="relative py-20 md:py-28 bg-[#0D2320] text-white border-y border-white/12 overflow-hidden">
+      <div className="relative z-10 max-w-[1280px] mx-auto px-5 sm:px-8">
         <Reveal>
           <div className="max-w-2xl mb-14">
-            <p className="text-xs font-semibold tracking-wider uppercase text-[#246B50] mb-3">
+            <p className="text-xs font-semibold tracking-wider uppercase text-[#F4B942] mb-3">
               Process
             </p>
-            <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-[#102D26] text-balance">
+            <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white text-balance">
               Your Journey to Solar, Made Simple.
             </h2>
           </div>
         </Reveal>
 
-        <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
-          {/* Desktop hairline connector */}
-          <div
-            aria-hidden="true"
-            className="hidden lg:block absolute top-5 left-0 right-0 h-[1px] bg-[#E4E9E1]"
-          />
-
+        <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {STEPS.map((step, index) => (
-            <Reveal key={step.number} delay={index * 0.08}>
-              <div className="relative pt-0 lg:pt-10 flex flex-col">
-                <div className="lg:absolute lg:top-0 lg:left-0 inline-flex items-center justify-center w-10 h-10 bg-[#F4F6EF] border border-[#E4E9E1] rounded-md font-display text-sm font-bold text-[#102D26] mb-4 lg:mb-0">
-                  {step.number}
+            <Reveal key={step.number} delay={index * 0.08} className="flex">
+              <div className="w-full p-7 rounded-2xl bg-white/5 backdrop-blur-lg border border-white/15 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)] flex flex-col justify-between">
+                <div>
+                  <div className="inline-flex items-center justify-center w-10 h-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl font-display text-sm font-bold text-[#F4B942] mb-5">
+                    {step.number}
+                  </div>
+                  <h3 className="font-display text-lg font-bold text-white mb-2.5">
+                    {step.title}
+                  </h3>
+                  <p className="text-sm text-white/75 leading-relaxed">
+                    {step.description}
+                  </p>
                 </div>
-                <h3 className="font-display text-lg font-bold text-[#102D26] mb-2.5 mt-1">
-                  {step.title}
-                </h3>
-                <p className="text-sm text-[#4F5E57] leading-relaxed">
-                  {step.description}
-                </p>
               </div>
             </Reveal>
           ))}

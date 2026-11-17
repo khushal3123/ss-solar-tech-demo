@@ -77,14 +77,14 @@ export function WhyChooseSection() {
             </Reveal>
           </div>
 
-          {/* Right Editorial 2-column hairline grid */}
+          {/* Right Editorial 2-column Liquid Glass grid */}
           <div className="lg:col-span-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 border-t border-l border-white/15">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               {BENEFITS.map(({ number, title, description, Icon }, index) => (
                 <Reveal key={number} delay={index * 0.05}>
-                  <div className="h-full p-7 sm:p-8 border-r border-b border-white/15 hover:bg-white/[0.03] transition-colors">
+                  <div className="h-full p-7 sm:p-8 rounded-2xl bg-white/5 backdrop-blur-lg border border-white/15 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)] hover:bg-white/[0.08] transition-colors">
                     <div className="flex items-center justify-between mb-6">
-                      <span className="font-display text-xs font-semibold tracking-wider text-[#F4B942]">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-white/5 border border-white/15 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)] font-display text-xs font-semibold tracking-wider text-[#F4B942]">
                         {number}
                       </span>
                       <Icon className="w-5 h-5 text-[#F4B942]" aria-hidden="true" />

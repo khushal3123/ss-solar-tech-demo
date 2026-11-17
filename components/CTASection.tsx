@@ -29,7 +29,7 @@ export function CTASection() {
 
       <div className="relative z-10 max-w-[1280px] mx-auto px-5 sm:px-8">
         <Reveal>
-          <div className="max-w-2xl">
+          <div className="max-w-3xl p-8 sm:p-11 rounded-2xl bg-white/5 backdrop-blur-lg border border-white/15 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)]">
             <p className="text-xs font-semibold tracking-wider uppercase text-[#F4B942] mb-3">
               Indore · Madhya Pradesh
             </p>
@@ -42,7 +42,7 @@ export function CTASection() {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-sm sm:text-base font-semibold text-[#102D26] bg-[#F4B942] hover:bg-[#eab035] rounded-md transition-colors whitespace-nowrap"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-sm sm:text-base font-semibold text-[#102D26] bg-[#F4B942] hover:bg-[#eab035] rounded-lg shadow-[0_4px_20px_rgba(244,185,66,0.28)] transition-colors whitespace-nowrap"
               >
                 <span>Get Free Consultation</span>
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
@@ -51,7 +51,7 @@ export function CTASection() {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-sm sm:text-base font-medium text-white border border-white/35 hover:bg-white/10 rounded-md transition-colors whitespace-nowrap"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-sm sm:text-base font-medium text-white bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/15 rounded-lg transition-colors whitespace-nowrap"
               >
                 <MessageCircle className="w-4 h-4 text-[#25D366]" aria-hidden="true" />
                 <span>Chat on WhatsApp</span>

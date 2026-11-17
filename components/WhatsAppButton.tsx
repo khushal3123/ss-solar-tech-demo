@@ -51,36 +51,36 @@ export function WhatsAppButton() {
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
             role="dialog"
             aria-label="Solar quick assistance"
-            className="w-[268px] bg-white border border-[#E4E9E1] rounded-lg shadow-lg p-4 text-[#17251F]"
+            className="w-[276px] bg-[#0F2626]/80 backdrop-blur-xl backdrop-saturate-150 border border-white/15 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15),0_16px_40px_rgba(0,0,0,0.45)] rounded-2xl p-4 text-white"
           >
             <div className="flex items-start justify-between gap-2 mb-2.5">
-              <p className="font-display text-sm font-semibold text-[#102D26]">
+              <p className="font-display text-sm font-semibold text-white">
                 Hi! Looking for a solar solution?
               </p>
               <button
                 type="button"
                 onClick={dismissPopup}
                 aria-label="Dismiss solar prompt"
-                className="p-1 -m-1 text-[#64736C] hover:text-[#102D26] rounded transition-colors"
+                className="p-1 -m-1 text-white/65 hover:text-white rounded transition-colors"
               >
                 <X className="w-4 h-4" aria-hidden="true" />
               </button>
             </div>
-            <p className="text-xs text-[#4F5E57] leading-relaxed mb-3.5">
+            <p className="text-xs text-white/75 leading-relaxed mb-3.5">
               Explore your estimated rooftop savings or request a site consultation in Indore.
             </p>
             <div className="flex items-center gap-2">
               <Link
                 href="/contact"
                 onClick={dismissPopup}
-                className="flex-1 inline-flex items-center justify-center px-3 py-2 text-xs font-semibold bg-[#F4B942] text-[#102D26] hover:bg-[#eab035] rounded-md transition-colors whitespace-nowrap"
+                className="flex-1 inline-flex items-center justify-center px-3 py-2 text-xs font-semibold bg-[#F4B942] text-[#102D26] hover:bg-[#eab035] rounded-lg transition-colors whitespace-nowrap"
               >
                 Get a Quote
               </Link>
               <Link
                 href="/#calculator"
                 onClick={dismissPopup}
-                className="flex-1 inline-flex items-center justify-center px-3 py-2 text-xs font-medium border border-[#E4E9E1] text-[#102D26] hover:bg-[#F4F6EF] rounded-md transition-colors whitespace-nowrap"
+                className="flex-1 inline-flex items-center justify-center px-3 py-2 text-xs font-medium border border-white/20 bg-white/10 text-white hover:bg-white/15 rounded-lg transition-colors whitespace-nowrap"
               >
                 Calculate Savings
               </Link>
@@ -101,7 +101,7 @@ export function WhatsAppButton() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 6 }}
               transition={{ duration: 0.16 }}
-              className="hidden sm:inline-block mr-3 px-3 py-1.5 text-xs font-medium text-white bg-[#102D26] rounded-md shadow-md whitespace-nowrap pointer-events-none"
+              className="hidden sm:inline-block mr-3 px-3.5 py-1.5 text-xs font-medium text-white bg-[#0F2626]/80 backdrop-blur-lg border border-white/15 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)] rounded-full whitespace-nowrap pointer-events-none"
             >
               Chat with us
             </motion.span>
